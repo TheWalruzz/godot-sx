@@ -113,6 +113,25 @@ func _ready() -> void:
 	Sx.from(some_other_node.my_signal).subscribe(func(): pass).dispose_with(self)
 ```
 
+### Signal-based properties
+Sometimes, you need to store some values and react when they change. For this reason, Sx provides it's own implementation of Signal-based values, much like ReactiveProperties in GodotRx and UniRx.
+
+```gdscript
+var property := SxProperty.new(10)
+property.as_signal().subscribe(func(value: int): print(value))
+property.value = 15
+
+# result:
+#	10
+#	15
+```
+
+You can also directly access the underlying signal:
+
+```gdscript
+property.value_changed.connect(func(value: int): print(value))
+```
+
 ### All available operators
 * delay
 * element_at
