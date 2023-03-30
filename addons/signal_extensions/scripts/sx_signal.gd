@@ -76,7 +76,7 @@ func map(callable: Callable) -> SxSignal:
 	return cloned
 	
 
-## Merges this [Class] with multiple signals in an array.
+## Merges this [SxSignal] with multiple signals in an array.
 func merge(signals: Array[SxSignal]) -> SxSignal:
 	var combined: Array[SxSignal] = [self]
 	combined.append_array(signals)

@@ -66,7 +66,7 @@ value_changed.emit(2)
 ```
 
 ### Merging signals
-Multiple Godot signals can be merged into one using `Sx.merge_from():
+Multiple Godot signals can be merged into one using `Sx.merge_from()`:
 
 ```gdscript
 signal signal1(int)
