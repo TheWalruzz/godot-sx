@@ -1,0 +1,27 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Signal Extensions"
+run/main_scene="res://example.tscn"
+config/features=PackedStringArray("4.0", "Forward Plus")
+
+[autoload]
+
+Sx="*res://addons/signal_extensions/signal_extensions.gd"
+
+[debug]
+
+gdscript/warnings/exclude_addons=false
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/signal_extensions/plugin.cfg")
