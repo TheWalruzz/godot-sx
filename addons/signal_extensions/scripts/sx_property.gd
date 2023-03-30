@@ -21,5 +21,5 @@ func _init(initial_value: Variant):
 func as_signal(emit_initial_value := true) -> SxSignal:
 	var result = Sx.from(value_changed)
 	if emit_initial_value:
-		result = result.start_with([_value])
+		result = result.start_with(func(): return [_value])
 	return result

@@ -5,7 +5,7 @@ class_name SxSignal
 var _operators: Array[SxOperator] = []
 var _callback: Callable
 var _is_disposing := false
-var _start_with_values: Array[Variant] = []
+var _start_with_callable: Callable
 
 
 ## Clones the signal object.
@@ -17,7 +17,7 @@ func clone() -> SxSignal:
 		op.done_callback = result._set_dispose
 		return op
 	))
-	result._start_with_values = _start_with_values.duplicate()
+	result._start_with_callable = _start_with_callable
 	return result
 
 
@@ -26,8 +26,9 @@ func clone() -> SxSignal:
 ## Otherwise, multiple arguments will be passed.
 func subscribe(callback: Callable, variadic := true) -> SxDisposable:
 	var disposable := _subscribe(callback, variadic)
-	if _start_with_values.size() > 0:
-		_handle_signal(_start_with_values, variadic)
+	if not _start_with_callable.is_null():
+		var args := _start_with_callable.call() as Array[Variant]
+		_handle_signal(args, variadic)
 	return disposable
 
 
@@ -97,9 +98,13 @@ func skip_while(callable: Callable) -> SxSignal:
 	
 
 ## Starts the sequence with provided values when subscribing.
-func start_with(values: Array[Variant]) -> SxSignal:
+## [b]callable_or_values[/b] can be a function returning an array of values or just an array of values.
+func start_with(callable_or_values: Variant) -> SxSignal:
 	var cloned := clone()
-	cloned._start_with_values = values
+	if is_instance_of(callable_or_values, TYPE_CALLABLE):
+		cloned._start_with_callable = callable_or_values
+	else:
+		cloned._start_with_callable = func(): return callable_or_values
 	return cloned
 
 
