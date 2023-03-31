@@ -5,6 +5,7 @@ class_name SxSignal
 var _operators: Array[SxOperator] = []
 var _is_disposing := false
 var _start_with_callable: Callable
+var _disposables := SxCompositeDisposable.new()
 
 
 ## Clones the signal object.
@@ -28,7 +29,7 @@ func subscribe(callback: Callable, variadic := true) -> SxDisposable:
 	if not _start_with_callable.is_null():
 		var args := _start_with_callable.call() as Array[Variant]
 		_handle_signal(callback, args, variadic)
-	return disposable
+	return disposable.dispose_with(_disposables)
 
 
 func _clone() -> SxSignal:
@@ -119,8 +120,8 @@ func _subscribe(_callable: Callable, _variadic := true) -> SxDisposable:
 	return null
 
 
-func _dispose() -> void:
-	pass
+func dispose() -> void:
+	_disposables.dispose()
 
 
 func _set_dispose():
@@ -139,4 +140,4 @@ func _handle_signal(callback: Callable, args: Array[Variant], variadic := true) 
 	else:
 		callback.call(result.args)
 	if _is_disposing:
-		_dispose()
+		dispose()

@@ -41,8 +41,3 @@ func _subscribe(callback: Callable, variadic := true) -> SxDisposable:
 		_signal.disconnect(handler)
 		_handlers.erase(handler)
 	)
-	
-	
-func _dispose() -> void:
-	for handler in _handlers:
-		_signal.disconnect(handler)
