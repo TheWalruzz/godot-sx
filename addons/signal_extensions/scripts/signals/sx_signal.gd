@@ -4,6 +4,7 @@ class_name SxSignal
 
 var _operators: Array[SxOperator] = []
 var _is_disposing := false
+var _is_disposed := false
 var _start_with_callable: Callable
 var _disposables := SxCompositeDisposable.new()
 
@@ -38,6 +39,7 @@ func subscribe(callback: Callable, variadic := true) -> SxDisposable:
 ## Disposes the [SxSignal]. This disconnects all the connected signals and disposes of the subscriptions.
 func dispose() -> void:
 	_disposables.dispose()
+	_is_disposed = true
 
 
 ## Delays item emission by [b]duration[/b]. 
@@ -125,7 +127,7 @@ func _clone() -> SxSignal:
 	
 	
 func _is_valid() -> bool:
-	return false
+	return not _is_disposed
 	
 	
 func _subscribe(_callable: Callable, _variadic := true) -> SxDisposable:

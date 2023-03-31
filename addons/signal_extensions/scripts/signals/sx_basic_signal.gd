@@ -14,7 +14,7 @@ func _clone() -> SxSignal:
 
 
 func _is_valid() -> bool:
-	return not _signal.is_null() and is_instance_valid(_signal.get_object())
+	return super() and not _signal.is_null() and is_instance_valid(_signal.get_object())
 
 
 func _subscribe(callback: Callable, variadic := true) -> SxDisposable:

@@ -14,7 +14,7 @@ func _clone() -> SxSignal:
 
 
 func _is_valid() -> bool:
-	return _signals.any(func(current_signal: SxSignal): return current_signal._is_valid())
+	return super() and _signals.any(func(current_signal: SxSignal): return current_signal._is_valid())
 
 
 func _subscribe(callback: Callable, variadic := true) -> SxDisposable:

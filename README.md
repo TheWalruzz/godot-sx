@@ -72,7 +72,7 @@ value_changed.emit(2)
 Sx supports signals with up to 6 arguments and they can also be filtered and mapped:
 
 ```gdscript
-signal multi_values(int, int)
+signal multi_values(int, int2)
 
 # when mapping multiple values, array must be returned from lambda
 Sx.from(multi_values) \
