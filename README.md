@@ -65,6 +65,38 @@ value_changed.emit(2)
 # 	4
 ```
 
+Sx supports signals with up to 6 arguments and they can also be filtered and mapped:
+
+```gdscript
+signal multi_values(int, int)
+
+Sx.from(multi_values) \
+	.filter(func(value1: int, value2: int): return value2 > value1) \
+	.map(func(value1: int, value2: int): return [value2, value1]) \ # when mapping multiple values, array must be returned from lambda
+	.subscribe(func(value1: int, value2: int): print(value1, value2))
+
+multi_values.emit(2, 1)	
+multi_values.emit(3, 10)
+
+# result:
+#	103
+```
+
+Number of arguments down the chain can be freely changed using map:
+
+```gdscript
+signal int_values(int)
+
+Sx.from(int_values) \
+	.map(func(value: int): return [value, value * 2])
+	.subscribe(func(value1: int, value2: int): print(value1, value2))
+	
+int_values.emit(3)
+
+# result:
+#	36
+```
+
 ### Merging signals
 Multiple Godot signals can be merged into one using `Sx.merge_from()`:
 
