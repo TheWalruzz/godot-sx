@@ -70,9 +70,10 @@ Sx supports signals with up to 6 arguments and they can also be filtered and map
 ```gdscript
 signal multi_values(int, int)
 
+# when mapping multiple values, array must be returned from lambda
 Sx.from(multi_values) \
 	.filter(func(value1: int, value2: int): return value2 > value1) \
-	.map(func(value1: int, value2: int): return [value2, value1]) \ # when mapping multiple values, array must be returned from lambda
+	.map(func(value1: int, value2: int): return [value2, value1]) \
 	.subscribe(func(value1: int, value2: int): print(value1, value2))
 
 multi_values.emit(2, 1)	
