@@ -3,21 +3,18 @@ class_name SxDisposable
 
 
 var is_disposed := false
-
-var _callable: Callable
-
-
-func _init(callable: Callable):
-	_callable = callable
 	
 	
 func dispose() -> void:
+	pass
+
+
+func dispose_with(source: Variant) -> SxDisposable:
 	if not is_disposed:
-		_callable.call()
-		is_disposed = true
-		
-		
-func dispose_with(node: Node) -> SxDisposable:
-	if not is_disposed:
-		node.tree_exiting.connect(dispose)
+		if source is SxCompositeDisposable:
+			source.append(self)
+		elif source is Node:
+			source.tree_exiting.connect(dispose)
+		else:
+			push_error("Trying to call dispose_with() with something different than Node or SxCompositeDisposable.")
 	return self

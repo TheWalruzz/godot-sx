@@ -137,12 +137,24 @@ However, you might want to dispose of them earlier or when the calling Node exit
 `subscribe()` method returns a SxDisposable object which allows for:
 * manual subscription disposal (and subsequent disconnection from signal) using `dispose()`
 * automatic disposal when Node is exitting the scene tree using `dispose_with(Node)`
+* adding disposable to SxCompositeDisposable using `dispose_with(SxCompositeDisposable)`
 
 ```gdscript
 extends Node
 
 func _ready() -> void:
 	Sx.from(some_other_node.my_signal).subscribe(func(): pass).dispose_with(self)
+```
+
+Composite disposable:
+	
+```gdscript
+signal test_signal
+
+var composite_disposable := SxCompositeDisposable.new()
+Sx.from(test_signal).subscribe(func(): print("First subscription")).dispose_with(composite_disposable)
+Sx.from(test_signal).subscribe(func(): print("Second subscription")).dispose_with(composite_disposable)
+composite_disposable.dispose()
 ```
 
 ### Signal-based properties

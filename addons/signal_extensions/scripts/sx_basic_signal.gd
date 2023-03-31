@@ -37,7 +37,7 @@ func _subscribe(callback: Callable, variadic := true) -> SxDisposable:
 	_signal.connect(handler)
 	_handlers.append(handler)
 	
-	return SxDisposable.new(func(): 
+	return SxSignalDisposable.new(func(): 
 		_signal.disconnect(handler)
 		_handlers.erase(handler)
 	)
