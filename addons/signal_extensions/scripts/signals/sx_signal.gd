@@ -25,15 +25,16 @@ func clone() -> SxSignal:
 ## If [b]variadic[/b] is set to false, it will pass an array with values to the [b]callback[/b].
 ## Otherwise, multiple arguments will be passed.
 func subscribe(callback: Callable, variadic := true) -> SxDisposable:
-	var disposable := _subscribe(callback, variadic)
+	var disposable := _subscribe(callback, variadic).dispose_with(_disposables)
 	if not _start_with_callable.is_null():
 		var args := _start_with_callable.call() as Array[Variant]
 		_handle_signal(callback, args, variadic)
-	return disposable.dispose_with(_disposables)
+	return disposable
 
 
-func _clone() -> SxSignal:
-	return null
+## Disposes the [SxSignal]. This disconnects all the connected signals and disposes of the subscriptions.
+func dispose() -> void:
+	_disposables.dispose()
 
 
 ## Delays item emission by [b]duration[/b]. 
@@ -116,12 +117,12 @@ func take_while(callable: Callable) -> SxSignal:
 	return cloned
 
 
+func _clone() -> SxSignal:
+	return null
+	
+	
 func _subscribe(_callable: Callable, _variadic := true) -> SxDisposable:
 	return null
-
-
-func dispose() -> void:
-	_disposables.dispose()
 
 
 func _set_dispose():

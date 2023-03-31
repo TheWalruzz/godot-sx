@@ -3,7 +3,6 @@ class_name SxBasicSignal
 
 
 var _signal: Signal
-var _handlers: Array[Callable] = []
 
 
 func _init(input_signal: Signal):
@@ -35,9 +34,5 @@ func _subscribe(callback: Callable, variadic := true) -> SxDisposable:
 			return
 
 	_signal.connect(handler)
-	_handlers.append(handler)
 	
-	return SxSignalDisposable.new(func(): 
-		_signal.disconnect(handler)
-		_handlers.erase(handler)
-	)
+	return SxSignalDisposable.new(func(): _signal.disconnect(handler))
