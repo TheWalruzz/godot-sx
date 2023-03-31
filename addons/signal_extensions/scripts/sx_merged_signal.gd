@@ -15,10 +15,8 @@ func _clone() -> SxSignal:
 
 
 func _subscribe(callback: Callable, variadic := true) -> SxDisposable:
-	_callback = callback
-
 	for input_signal in _signals:
-		var disposable = input_signal.subscribe(func(args: Array[Variant]): _handle_signal(args, variadic), false)
+		var disposable = input_signal.subscribe(func(args: Array[Variant]): _handle_signal(callback, args, variadic), false)
 		_disposables.append(disposable)
 	
 	return SxDisposable.new(_dispose)

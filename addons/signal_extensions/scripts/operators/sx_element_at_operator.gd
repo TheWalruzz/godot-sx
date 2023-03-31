@@ -17,6 +17,6 @@ func clone() -> SxOperator:
 func evaluate(args: Array[Variant]) -> SxOperatorResult:
 	var result := SxOperatorResult.new(_current_index == _element_index, args)
 	if _current_index == _element_index:
-		done_callback.call()
+		dispose_callback.call()
 	_current_index += 1
 	return result

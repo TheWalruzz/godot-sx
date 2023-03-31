@@ -3,7 +3,6 @@ class_name SxSignal
 
 
 var _operators: Array[SxOperator] = []
-var _callback: Callable
 var _is_disposing := false
 var _start_with_callable: Callable
 
@@ -14,7 +13,7 @@ func clone() -> SxSignal:
 	var result := _clone()
 	result._operators.assign(_operators.map(func(operator: SxOperator) -> SxOperator: 
 		var op := operator.clone() as SxOperator
-		op.done_callback = result._set_dispose
+		op.dispose_callback = result._set_dispose
 		return op
 	))
 	result._start_with_callable = _start_with_callable
@@ -28,7 +27,7 @@ func subscribe(callback: Callable, variadic := true) -> SxDisposable:
 	var disposable := _subscribe(callback, variadic)
 	if not _start_with_callable.is_null():
 		var args := _start_with_callable.call() as Array[Variant]
-		_handle_signal(args, variadic)
+		_handle_signal(callback, args, variadic)
 	return disposable
 
 
@@ -50,7 +49,7 @@ func delay(duration: float, process_always := true, process_in_physics := false,
 func element_at(index: int) -> SxSignal:
 	var cloned := clone()
 	cloned._operators.append(SxElementAtOperator.new(index))
-	cloned._operators.back().done_callback = cloned._set_dispose
+	cloned._operators.back().dispose_callback = cloned._set_dispose
 	return cloned
 
 
@@ -65,7 +64,7 @@ func filter(callable: Callable) -> SxSignal:
 func first() -> SxSignal:
 	var cloned := clone()
 	cloned._operators.append(SxFirstOperator.new())
-	cloned._operators.back().done_callback = cloned._set_dispose
+	cloned._operators.back().dispose_callback = cloned._set_dispose
 	return cloned
 	
 
@@ -112,7 +111,7 @@ func start_with(callable_or_values: Variant) -> SxSignal:
 func take_while(callable: Callable) -> SxSignal:
 	var cloned := clone()
 	cloned._operators.append(SxTakeWhileOperator.new(callable))
-	cloned._operators.back().done_callback = cloned._set_dispose
+	cloned._operators.back().dispose_callback = cloned._set_dispose
 	return cloned
 
 
@@ -128,7 +127,7 @@ func _set_dispose():
 	_is_disposing = true
 
 
-func _handle_signal(args: Array[Variant], variadic := true) -> void:
+func _handle_signal(callback: Callable, args: Array[Variant], variadic := true) -> void:
 	var result: SxOperatorResult = SxOperatorResult.new(true, args)
 	for operator in _operators:
 		@warning_ignore("redundant_await")
@@ -136,8 +135,8 @@ func _handle_signal(args: Array[Variant], variadic := true) -> void:
 		if not result.ok:
 			return
 	if variadic:
-		_callback.callv(result.args)
+		callback.callv(result.args)
 	else:
-		_callback.call(result.args)
+		callback.call(result.args)
 	if _is_disposing:
 		_dispose()

@@ -2,7 +2,7 @@ extends RefCounted
 class_name SxOperator
 
 
-var done_callback: Callable
+var dispose_callback: Callable
 
 
 func clone() -> SxOperator:

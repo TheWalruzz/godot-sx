@@ -8,5 +8,5 @@ func clone() -> SxOperator:
 
 func evaluate(args: Array[Variant]) -> SxOperatorResult:
 	var result := SxOperatorResult.new(true, args)
-	done_callback.call()
+	dispose_callback.call()
 	return result

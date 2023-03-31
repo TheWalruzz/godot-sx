@@ -11,7 +11,9 @@ config_version=5
 [application]
 
 config/name="Signal Extensions"
+run/main_scene="res://node_2d.tscn"
 config/features=PackedStringArray("4.0", "Forward Plus")
+config/icon="res://logo.png"
 
 [autoload]
 

@@ -15,6 +15,6 @@ func clone() -> SxOperator:
 	
 func evaluate(args: Array[Variant]) -> SxOperatorResult:
 	if not _callable.callv(args):
-		done_callback.call()
+		dispose_callback.call()
 		return SxOperatorResult.new(false, args)
 	return SxOperatorResult.new(true, args)
