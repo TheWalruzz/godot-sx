@@ -9,9 +9,13 @@ If you need a proper Rx implementation for Godot 4, see this excellent project: 
 
 ## Motivation
 The main goal of this library is to allow for more advanced signal handling in Godot.
-This is usually done by an Rx framework (like GodotRx mentioned above or UniRx in Unity), but both those solutions are pretty big due to the sheer scale of mechanisms needed for pure Rx to work.
-Godot's built-in signal system is robust, but could really profit from reactive approach, which works pretty well with games, where a lot of components interact with each other.
+
+Godot's built-in signal system is robust, but could really profit from reactive approach, which works pretty well with games. Especially when a lot of components interact with each other.
+
+Those kind of manipulations could be done by an Rx framework (like GodotRx mentioned above), but this means including a package, that due to the sheer scale of mechanisms needed for pure Rx to work, is really big and bloated for use cases you might actually encounter in your code.
+
 Instead of including a big and complex Rx solution, why not extend the existing mechanism?
+
 Sx allows for signal manipulation that feels like Rx, without all the overhead.
 
 ## Installation
