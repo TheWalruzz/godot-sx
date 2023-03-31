@@ -25,6 +25,9 @@ func clone() -> SxSignal:
 ## If [b]variadic[/b] is set to false, it will pass an array with values to the [b]callback[/b].
 ## Otherwise, multiple arguments will be passed.
 func subscribe(callback: Callable, variadic := true) -> SxDisposable:
+	if not _is_valid():
+		push_error("Trying to subscribe to invalid SxSignal.")
+		return null
 	var disposable := _subscribe(callback, variadic).dispose_with(_disposables)
 	if not _start_with_callable.is_null():
 		var args := _start_with_callable.call() as Array[Variant]
@@ -121,6 +124,10 @@ func _clone() -> SxSignal:
 	return null
 	
 	
+func _is_valid() -> bool:
+	return false
+	
+	
 func _subscribe(_callable: Callable, _variadic := true) -> SxDisposable:
 	return null
 
@@ -134,7 +141,8 @@ func _handle_signal(callback: Callable, args: Array[Variant], variadic := true) 
 	for operator in _operators:
 		@warning_ignore("redundant_await")
 		result = await operator.evaluate(result.args)
-		if not result.ok:
+		# this also traps async operators that might still be running when signal becomes invalid
+		if not _is_valid() or not result.ok:
 			return
 	if variadic:
 		callback.callv(result.args)

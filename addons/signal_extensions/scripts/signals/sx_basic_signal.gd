@@ -13,8 +13,12 @@ func _clone() -> SxSignal:
 	return SxBasicSignal.new(_signal)
 
 
+func _is_valid() -> bool:
+	return not _signal.is_null() and is_instance_valid(_signal.get_object())
+
+
 func _subscribe(callback: Callable, variadic := true) -> SxDisposable:
-	var source := instance_from_id(_signal.get_object_id())
+	var source := _signal.get_object()
 	var number_of_args := source.get_signal_list() \
 		.filter(func(signal_info: Dictionary) -> bool: return signal_info["name"] == _signal.get_name()) \
 		.map(func(signal_info: Dictionary) -> int: return signal_info["args"].size()) \
@@ -35,4 +39,7 @@ func _subscribe(callback: Callable, variadic := true) -> SxDisposable:
 
 	_signal.connect(handler)
 	
-	return SxSignalDisposable.new(func(): _signal.disconnect(handler))
+	return SxSignalDisposable.new(func():
+		if _is_valid():
+			_signal.disconnect(handler)	
+	)
