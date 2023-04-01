@@ -116,6 +116,14 @@ func start_with(callable_or_values: Variant) -> SxSignal:
 	return cloned
 
 
+## Takes only the first [b]item_count[/b] items from the sequence.
+func take(item_count: int) -> SxSignal:
+	var cloned := clone()
+	cloned._operators.append(SxTakeOperator.new(item_count))
+	cloned._operators.back().dispose_callback = cloned._set_dispose
+	return cloned
+
+
 ## Emits items until the given predicate returns false.
 func take_while(callable: Callable) -> SxSignal:
 	var cloned := clone()

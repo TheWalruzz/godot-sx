@@ -2,18 +2,18 @@ extends SxOperator
 class_name SxSkipOperator
 
 
-var _skip_items: int
+var _target_item_count: int
 var _count := 0
 
 
-func _init(skip_items: int):
-	_skip_items = skip_items
+func _init(target_item_count: int):
+	_target_item_count = target_item_count
 	
 	
 func clone() -> SxOperator:
-	return SxSkipOperator.new(_skip_items)
+	return SxSkipOperator.new(_target_item_count)
 	
 	
 func evaluate(args: Array[Variant]) -> SxOperatorResult:
 	_count += 1
-	return SxOperatorResult.new(_count > _skip_items, args)
+	return SxOperatorResult.new(_count > _target_item_count, args)

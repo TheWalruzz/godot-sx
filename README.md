@@ -221,8 +221,10 @@ disposable.dispose()
 * filter
 * first
 * map
+* merge
 * skip
 * skip_while
+* take
 * take_while
 
 Please note that full implementation of all Rx operators is NOT a goal of this library.
