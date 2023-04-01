@@ -137,8 +137,8 @@ signal2.emit(2)
 ```
 
 ### Subscription disposal
-By default, subscriptions will be disposed of when base signal becomes inactive (i.e. Node is exitting a scene tree), which is regular behavior for signals in Godot.
-However, you might want to dispose of them earlier or when the calling Node exits the tree.
+By default, subscriptions will be disposed when base signal becomes inactive (i.e. Node is exitting a scene tree), which is regular behavior for signals in Godot.
+However, you might want to dispose them earlier or when the calling Node exits the tree.
 `subscribe()` method returns a SxDisposable object which allows for:
 * manual subscription disposal (and subsequent disconnection from signal) using `dispose()`
 * automatic disposal when Node is exitting the scene tree using `dispose_with(Node)`
@@ -179,6 +179,40 @@ You can also directly access the underlying signal:
 
 ```gdscript
 property.value_changed.connect(func(value: int): print(value))
+```
+
+### On complete callback
+When you're subscribing, you can set an optional callback thet will be fired when the signal completes (either naturally, or when signal is disposed).
+
+```gdscript
+signal numbers(int)
+
+Sx.from(numbers).first().subscribe(
+	func(value: int): print(value),
+	func(): print("Completed")
+)
+numbers.emit(5)
+
+# result:
+#	5
+#	Completed
+```
+
+Or:
+	
+```gdscript
+signal numbers(int)
+
+var disposable := Sx.from(numbers).subscribe(
+	func(value: int): print(value),
+	func(): print("Completed")
+)
+numbers.emit(5)
+disposable.dispose()
+
+# result:
+#	5
+#	Completed
 ```
 
 ### All available operators

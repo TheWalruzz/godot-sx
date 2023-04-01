@@ -17,7 +17,7 @@ func _is_valid() -> bool:
 	return super() and not _signal.is_null() and is_instance_valid(_signal.get_object())
 
 
-func _subscribe(callback: Callable, variadic := true) -> SxDisposable:
+func _subscribe(callback: Callable, on_complete: Callable, variadic := true) -> SxDisposable:
 	var source := _signal.get_object()
 	var number_of_args := source.get_signal_list() \
 		.filter(func(signal_info: Dictionary) -> bool: return signal_info["name"] == _signal.get_name()) \
@@ -41,5 +41,7 @@ func _subscribe(callback: Callable, variadic := true) -> SxDisposable:
 	
 	return SxSignalDisposable.new(func():
 		if _is_valid():
+			if not on_complete.is_null():
+				on_complete.call()
 			_signal.disconnect(handler)	
 	)
