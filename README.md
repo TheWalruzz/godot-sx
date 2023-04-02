@@ -221,6 +221,7 @@ disposable.dispose()
 * first
 * map
 * merge
+* merge_from
 * skip
 * skip_while
 * take

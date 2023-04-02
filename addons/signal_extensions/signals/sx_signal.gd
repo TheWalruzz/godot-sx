@@ -84,11 +84,18 @@ func map(callable: Callable) -> SxSignal:
 	return cloned
 	
 
-## Merges this [SxSignal] with multiple signals in an array.
+## Merges this [SxSignal] with multiple SxSignals in an array.
 func merge(signals: Array[SxSignal]) -> SxSignal:
 	var combined: Array[SxSignal] = [self]
 	combined.append_array(signals)
 	return SxMergedSignal.new(combined)
+	
+
+## Merges this [SxSignal] with multiple Godot signals in an array.
+func merge_from(signals: Array[Signal]) -> SxSignal:
+	var converted: Array[SxSignal] = []
+	converted.assign(signals.map(func(input: Signal): return SxBasicSignal.new(input)))
+	return merge(converted)
 
 
 ## Skips the first [b]item_count[/b] items from the sequence.
