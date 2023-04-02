@@ -20,7 +20,8 @@ Sx allows for signal manipulation that feels like Rx, without all the overhead.
 
 ## Installation
 * Copy `addons/signal_extensions` directory to the `/addons/` directory in your project
-* You're done! You now have access to static Sx class!
+* Enable `SignalExtensions` plugin in Project Settings -> Plugins
+* You're done! You now have access to Sx singleton!
 
 
 ## Basic usage
