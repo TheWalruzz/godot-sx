@@ -14,14 +14,6 @@ config/name="Signal Extensions"
 config/features=PackedStringArray("4.0", "Forward Plus")
 config/icon="res://logo.png"
 
-[autoload]
-
-Sx="*res://addons/signal_extensions/signal_extensions.gd"
-
 [debug]
 
 gdscript/warnings/exclude_addons=false
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/signal_extensions/plugin.cfg")

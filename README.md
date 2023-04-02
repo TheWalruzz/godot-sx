@@ -20,8 +20,7 @@ Sx allows for signal manipulation that feels like Rx, without all the overhead.
 
 ## Installation
 * Copy `addons/signal_extensions` directory to the `/addons/` directory in your project
-* In your Project Settings, go to Plugins tab and enable `SignalExtensions` plugin.
-* You're done! You can now access `Sx` singleton in your code!
+* You're done! You now have access to static Sx class!
 
 
 ## Basic usage
@@ -182,7 +181,7 @@ property.value_changed.connect(func(value: int): print(value))
 ```
 
 ### On complete callback
-When you're subscribing, you can set an optional callback thet will be fired when the signal completes (either naturally, or when signal is disposed).
+When you're subscribing, you can set an optional callback that will be fired when the signal completes (either naturally, or when signal is disposed).
 
 ```gdscript
 signal numbers(int)
