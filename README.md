@@ -136,6 +136,30 @@ signal2.emit(2)
 #	6
 ```
 
+### Timers
+To simplify creation of periodic interval timers (without the hassle of creating and managing a Timer node yourself),
+you can use `Sx.interval_timer()` to create a SxSignal that will periodically emit items.
+
+```gdscript
+Sx.interval_timer(1.0).subscribe(func(): print("Tick!))
+# prints 'Tick!' every second
+```
+
+`interval_timer()` also accepts optional parameters to control the process mode and process callback of the timer.
+To see more information about what they do, check Godot docs about Node and Timer respectively.
+
+```gdscript
+Sx.interval_timer(1.0, Node.PROCESS_MODE_ALWAYS, Timer.TIMER_PROCESS_PHYSICS).subscribe(func(): print("Tick!"))
+```
+
+This Timer will automatically destroy itself once all the subscriptions are disposed.
+
+Creation of one-shot timers this way is not supported, but you can just do:
+
+```gdscript
+Sx.from(get_tree().create_timer(1.0).timeout).subscribe(func(): print("Timeout!"))
+```
+
 ### Subscription disposal
 By default, subscriptions will be disposed when base signal becomes inactive (i.e. Node is exitting a scene tree), which is regular behavior for signals in Godot.
 However, you might want to dispose them earlier or when the calling Node exits the tree.
