@@ -165,8 +165,7 @@ Sx.from(get_tree().create_timer(1.0).timeout).subscribe(func(): print("Timeout!"
 ```
 
 ### Subscription disposal
-By default, subscriptions will be disposed when base signal becomes inactive (i.e. Node is exitting a scene tree), which is regular behavior for signals in Godot.
-However, you might want to dispose them earlier or when the calling Node exits the tree.
+You might want to dispose SxSignals earlier or when the subscribing Node exits the tree (both of which are highly recommended to make sure no accidental memory leaks occur).
 `subscribe()` method returns a SxDisposable object which allows for:
 * manual subscription disposal (and subsequent disconnection from signal) using `dispose()`
 * automatic disposal when Node is exitting the scene tree using `dispose_with(Node)`
@@ -187,6 +186,17 @@ signal test_signal
 var composite_disposable := SxCompositeDisposable.new()
 Sx.from(test_signal).subscribe(func(): print("First subscription")).dispose_with(composite_disposable)
 Sx.from(test_signal).subscribe(func(): print("Second subscription")).dispose_with(composite_disposable)
+composite_disposable.dispose()
+```
+
+Disposables can also be added to a SxCompositeDisposable directly:
+
+```gdscript
+signal some_signal
+
+var composite_disposable := SxCompositeDisposable.new()
+var disposable := Sx.from(some_signal).subscribe(func(): pass)
+composite_disposable.append(disposable)
 composite_disposable.dispose()
 ```
 
