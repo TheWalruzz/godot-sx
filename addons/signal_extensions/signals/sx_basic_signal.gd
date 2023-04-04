@@ -43,5 +43,5 @@ func _subscribe(callback: Callable, on_complete: Callable, variadic := true) -> 
 		if _is_valid():
 			if not on_complete.is_null():
 				on_complete.call()
-			_signal.disconnect(handler)	
+			_signal.disconnect(handler)
 	)

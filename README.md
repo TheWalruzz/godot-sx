@@ -78,13 +78,13 @@ signal multi_values(int, int2)
 Sx.from(multi_values) \
 	.filter(func(value1: int, value2: int): return value2 > value1) \
 	.map(func(value1: int, value2: int): return [value2, value1]) \
-	.subscribe(func(value1: int, value2: int): print(value1, value2))
+	.subscribe(func(value1: int, value2: int): print(value1, " ", value2))
 
 multi_values.emit(2, 1)	
 multi_values.emit(3, 10)
 
 # result:
-#	103
+#	10 3
 ```
 
 Number of arguments down the chain can be freely changed using map:
@@ -93,13 +93,13 @@ Number of arguments down the chain can be freely changed using map:
 signal int_values(int)
 
 Sx.from(int_values) \
-	.map(func(value: int): return [value, value * 2])
-	.subscribe(func(value1: int, value2: int): print(value1, value2))
+	.map(func(value: int): return [value, value * 2]) \
+	.subscribe(func(value1: int, value2: int): print(value1, " ", value2))
 	
 int_values.emit(3)
 
 # result:
-#	36
+#	3 6
 ```
 
 ### Merging signals
@@ -141,7 +141,7 @@ To simplify creation of periodic interval timers (without the hassle of creating
 you can use `Sx.interval_timer()` to create a SxSignal that will periodically emit items.
 
 ```gdscript
-Sx.interval_timer(1.0).subscribe(func(): print("Tick!))
+Sx.interval_timer(1.0).subscribe(func(): print("Tick!"))
 # prints 'Tick!' every second
 ```
 
@@ -149,7 +149,11 @@ Sx.interval_timer(1.0).subscribe(func(): print("Tick!))
 To see more information about what they do, check Godot docs about Node and Timer respectively.
 
 ```gdscript
-Sx.interval_timer(1.0, Node.PROCESS_MODE_ALWAYS, Timer.TIMER_PROCESS_PHYSICS).subscribe(func(): print("Tick!"))
+Sx.interval_timer(
+	1.0,
+	Node.PROCESS_MODE_ALWAYS,
+	Timer.TIMER_PROCESS_PHYSICS
+).subscribe(func(): print("Tick!"))
 ```
 
 This Timer will automatically destroy itself once all the subscriptions are disposed.
@@ -205,6 +209,17 @@ You can also directly access the underlying signal:
 property.value_changed.connect(func(value: int): print(value))
 ```
 
+Also, in case you don't want the initial emission when subscribing to SxProperty, you can pass false to `as_signal()`:
+	
+```gdscript
+var property := SxProperty.new(10)
+property.as_signal(false).subscribe(func(value: int): print(value))
+property.value = 15
+
+# result:
+#	15
+```
+
 ### On complete callback
 When you're subscribing, you can set an optional callback that will be fired when the signal completes (either naturally, or when signal is disposed).
 
@@ -249,6 +264,7 @@ disposable.dispose()
 * merge_from
 * skip
 * skip_while
+* start_with
 * take
 * take_while
 

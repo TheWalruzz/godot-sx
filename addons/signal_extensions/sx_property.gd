@@ -2,7 +2,7 @@ extends RefCounted
 class_name SxProperty
 
 
-signal value_changed(Variant)
+signal value_changed(new_value)
 
 
 var _value: Variant

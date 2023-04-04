@@ -38,7 +38,6 @@ func subscribe(callback: Callable, on_complete := Callable(), variadic := true) 
 
 
 ## Disposes the [SxSignal]. This disconnects all the connected signals and disposes of the subscriptions.
-## This also sends a callback set by [method on_complete].
 func dispose() -> void:
 	_disposables.dispose()
 	_is_disposed = true
@@ -57,8 +56,9 @@ func delay(duration: float, process_always := true, process_in_physics := false,
 ## The index starts at 0.
 func element_at(index: int) -> SxSignal:
 	var cloned := clone()
-	cloned._operators.append(SxElementAtOperator.new(index))
-	cloned._operators.back().dispose_callback = cloned._set_dispose
+	var operator := SxElementAtOperator.new(index)
+	operator.dispose_callback = cloned._set_dispose
+	cloned._operators.append(operator)
 	return cloned
 
 
@@ -72,8 +72,9 @@ func filter(callable: Callable) -> SxSignal:
 ## Emits only the first item in the sequence.
 func first() -> SxSignal:
 	var cloned := clone()
-	cloned._operators.append(SxFirstOperator.new())
-	cloned._operators.back().dispose_callback = cloned._set_dispose
+	var operator := SxFirstOperator.new()
+	operator.dispose_callback = cloned._set_dispose
+	cloned._operators.append(operator)
 	return cloned
 	
 
@@ -126,16 +127,18 @@ func start_with(callable_or_values: Variant) -> SxSignal:
 ## Takes only the first [b]item_count[/b] items from the sequence.
 func take(item_count: int) -> SxSignal:
 	var cloned := clone()
-	cloned._operators.append(SxTakeOperator.new(item_count))
-	cloned._operators.back().dispose_callback = cloned._set_dispose
+	var operator := SxTakeOperator.new(item_count)
+	operator.dispose_callback = cloned._set_dispose
+	cloned._operators.append(operator)
 	return cloned
 
 
 ## Emits items until the given predicate returns false.
 func take_while(callable: Callable) -> SxSignal:
 	var cloned := clone()
-	cloned._operators.append(SxTakeWhileOperator.new(callable))
-	cloned._operators.back().dispose_callback = cloned._set_dispose
+	var operator := SxTakeWhileOperator.new(callable)
+	operator.dispose_callback = cloned._set_dispose
+	cloned._operators.append(operator)
 	return cloned
 
 

@@ -24,13 +24,13 @@ func merge_from(signals: Array[Signal]) -> SxSignal:
 ## For more information about [b]process_callback[/b], see [class Timer].
 func interval_timer(
 	interval: float,
-	process_mode: Node.ProcessMode = Node.PROCESS_MODE_INHERIT,
+	mode: Node.ProcessMode = Node.PROCESS_MODE_INHERIT,
 	process_callback: Timer.TimerProcessCallback = Timer.TIMER_PROCESS_IDLE
 ) -> SxSignal:
 	var timer_node := Timer.new()
 	timer_node.autostart = true
 	timer_node.wait_time = interval
-	timer_node.process_mode = process_mode
+	timer_node.process_mode = mode
 	timer_node.process_callback = process_callback
 	add_child(timer_node)
 	return SxTimerSignal.new(timer_node)
