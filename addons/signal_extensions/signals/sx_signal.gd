@@ -163,8 +163,13 @@ func _handle_signal(callback: Callable, args: Array[Variant], variadic := true) 
 	for operator in _operators:
 		@warning_ignore("redundant_await")
 		result = await operator.evaluate(result.args)
-		# this also traps async operators that might still be running when signal becomes invalid
-		if not _is_valid() or not result.ok:
+		# this traps async operators that might still be running when signal becomes invalid
+		if not _is_valid():
+			return
+		if not result.ok:
+			# handle situations where the operator doesn't allow operator emission, but wants to dispose
+			if _is_disposing:
+				dispose()
 			return
 	if variadic:
 		callback.callv(result.args)
