@@ -1,5 +1,4 @@
 extends RefCounted
-class_name SxOperatorResult
 
 
 var ok := false

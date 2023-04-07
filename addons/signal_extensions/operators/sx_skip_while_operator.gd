@@ -1,5 +1,4 @@
-extends SxOperator
-class_name SxSkipWhileOperator
+extends Sx.Operator
 
 
 var _callable: Callable
@@ -10,11 +9,11 @@ func _init(callable: Callable):
 	_callable = callable
 	
 	
-func clone() -> SxOperator:
-	return SxSkipWhileOperator.new(_callable)
+func clone() -> Sx.Operator:
+	return Sx.SkipWhileOperator.new(_callable)
 	
 	
-func evaluate(args: Array[Variant]) -> SxOperatorResult:
+func evaluate(args: Array[Variant]) -> Sx.OperatorResult:
 	if _is_skipping and not _callable.callv(args):
 		_is_skipping = false
-	return SxOperatorResult.new(not _is_skipping, args)
+	return Sx.OperatorResult.new(not _is_skipping, args)

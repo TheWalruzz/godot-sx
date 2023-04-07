@@ -1,5 +1,4 @@
-extends SxOperator
-class_name SxElementAtOperator
+extends Sx.Operator
 
 
 var _element_index: int
@@ -10,12 +9,12 @@ func _init(element_index: int):
 	_element_index = element_index
 	
 	
-func clone() -> SxOperator:
-	return SxElementAtOperator.new(_element_index)
+func clone() -> Sx.Operator:
+	return Sx.ElementAtOperator.new(_element_index)
 
 
-func evaluate(args: Array[Variant]) -> SxOperatorResult:
-	var result := SxOperatorResult.new(_current_index == _element_index, args)
+func evaluate(args: Array[Variant]) -> Sx.OperatorResult:
+	var result := Sx.OperatorResult.new(_current_index == _element_index, args)
 	if _current_index == _element_index:
 		dispose_callback.call()
 	_current_index += 1

@@ -1,12 +1,11 @@
-extends SxOperator
-class_name SxFirstOperator
+extends Sx.Operator
 
 
-func clone() -> SxOperator:
-	return SxFirstOperator.new()
+func clone() -> Sx.Operator:
+	return Sx.FirstOperator.new()
 
 
-func evaluate(args: Array[Variant]) -> SxOperatorResult:
-	var result := SxOperatorResult.new(true, args)
+func evaluate(args: Array[Variant]) -> Sx.OperatorResult:
+	var result := Sx.OperatorResult.new(true, args)
 	dispose_callback.call()
 	return result

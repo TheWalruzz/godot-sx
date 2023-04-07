@@ -1,5 +1,4 @@
 extends SxSignal
-class_name SxTimerSignal
 
 
 var _timer: Timer = null
@@ -10,7 +9,7 @@ func _init(timer: Timer):
 
 
 func _clone() -> SxSignal:
-	return SxTimerSignal.new(_timer)
+	return Sx.TimerSignal.new(_timer)
 	
 	
 func _is_valid() -> bool:
@@ -21,7 +20,7 @@ func _subscribe(callback: Callable, on_complete: Callable, variadic := true) -> 
 	var handler: Callable = func(): _handle_signal(callback, [], variadic)
 	_timer.timeout.connect(handler)
 
-	return SxSignalDisposable.new(func():
+	return Sx.SignalDisposable.new(func():
 		if _is_valid():
 			if not on_complete.is_null():
 				on_complete.call()

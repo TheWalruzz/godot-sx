@@ -1,5 +1,4 @@
 extends SxSignal
-class_name SxMergedSignal
 
 
 var _signals: Array[SxSignal]
@@ -10,7 +9,7 @@ func _init(signals: Array[SxSignal]):
 	
 	
 func _clone() -> SxSignal:
-	return SxMergedSignal.new(_signals)
+	return Sx.MergedSignal.new(_signals)
 
 
 func _is_valid() -> bool:
@@ -23,7 +22,7 @@ func _subscribe(callback: Callable, on_complete: Callable, variadic := true) -> 
 		input_signal.subscribe(func(args: Array[Variant]): _handle_signal(callback, args, variadic), Callable(), false) \
 			.dispose_with(composite_disposable)
 	
-	return SxSignalDisposable.new(func():
+	return Sx.SignalDisposable.new(func():
 		if _is_valid():
 			if not on_complete.is_null():
 				on_complete.call()

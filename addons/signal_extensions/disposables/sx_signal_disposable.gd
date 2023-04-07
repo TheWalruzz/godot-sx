@@ -1,5 +1,4 @@
 extends SxDisposable
-class_name SxSignalDisposable
 
 
 var _callable: Callable

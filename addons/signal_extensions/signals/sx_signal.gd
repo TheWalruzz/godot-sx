@@ -2,7 +2,7 @@ extends RefCounted
 class_name SxSignal
 
 
-var _operators: Array[SxOperator] = []
+var _operators: Array[Sx.Operator] = []
 var _is_disposing := false
 var _is_disposed := false
 var _start_with_callable: Callable
@@ -13,8 +13,8 @@ var _disposables := SxCompositeDisposable.new()
 ## When cloned, the new signal retains all the operators, but is otherwise a completely new object.
 func clone() -> SxSignal:
 	var result := _clone()
-	result._operators.assign(_operators.map(func(operator: SxOperator) -> SxOperator: 
-		var op := operator.clone() as SxOperator
+	result._operators.assign(_operators.map(func(operator: Sx.Operator) -> Sx.Operator: 
+		var op := operator.clone() as Sx.Operator
 		op.dispose_callback = result._set_dispose
 		return op
 	))
@@ -48,7 +48,7 @@ func dispose() -> void:
 ## See that method's documentation for more information.
 func delay(duration: float, process_always := true, process_in_physics := false, ignore_timescale := false) -> SxSignal:
 	var cloned := clone()
-	cloned._operators.append(SxDelayOperator.new(duration, process_always, process_in_physics, ignore_timescale))
+	cloned._operators.append(Sx.DelayOperator.new(duration, process_always, process_in_physics, ignore_timescale))
 	return cloned
 
 
@@ -56,7 +56,7 @@ func delay(duration: float, process_always := true, process_in_physics := false,
 ## The index starts at 0.
 func element_at(index: int) -> SxSignal:
 	var cloned := clone()
-	var operator := SxElementAtOperator.new(index)
+	var operator := Sx.ElementAtOperator.new(index)
 	operator.dispose_callback = cloned._set_dispose
 	cloned._operators.append(operator)
 	return cloned
@@ -65,14 +65,14 @@ func element_at(index: int) -> SxSignal:
 ## Emits only those items that pass a predicate test with a [b]callable[/b].
 func filter(callable: Callable) -> SxSignal:
 	var cloned := clone()
-	cloned._operators.append(SxFilterOperator.new(callable))
+	cloned._operators.append(Sx.FilterOperator.new(callable))
 	return cloned
 	
 
 ## Emits only the first item in the sequence.
 func first() -> SxSignal:
 	var cloned := clone()
-	var operator := SxFirstOperator.new()
+	var operator := Sx.FirstOperator.new()
 	operator.dispose_callback = cloned._set_dispose
 	cloned._operators.append(operator)
 	return cloned
@@ -81,7 +81,7 @@ func first() -> SxSignal:
 ## Maps the emitted items using a mapping function.
 func map(callable: Callable) -> SxSignal:
 	var cloned := clone()
-	cloned._operators.append(SxMapOperator.new(callable))
+	cloned._operators.append(Sx.MapOperator.new(callable))
 	return cloned
 	
 
@@ -89,27 +89,27 @@ func map(callable: Callable) -> SxSignal:
 func merge(signals: Array[SxSignal]) -> SxSignal:
 	var combined: Array[SxSignal] = [self]
 	combined.append_array(signals)
-	return SxMergedSignal.new(combined)
+	return Sx.MergedSignal.new(combined)
 	
 
 ## Merges this [SxSignal] with multiple Godot signals in an array.
 func merge_from(signals: Array[Signal]) -> SxSignal:
 	var converted: Array[SxSignal] = []
-	converted.assign(signals.map(func(input: Signal): return SxBasicSignal.new(input)))
+	converted.assign(signals.map(func(input: Signal): return Sx.BasicSignal.new(input)))
 	return merge(converted)
 
 
 ## Skips the first [b]item_count[/b] items from the sequence.
 func skip(item_count: int) -> SxSignal:
 	var cloned := clone()
-	cloned._operators.append(SxSkipOperator.new(item_count))
+	cloned._operators.append(Sx.SkipOperator.new(item_count))
 	return cloned
 
 
 ## Skips emission until the given predicate returns false.
 func skip_while(callable: Callable) -> SxSignal:
 	var cloned := clone()
-	cloned._operators.append(SxSkipWhileOperator.new(callable))
+	cloned._operators.append(Sx.SkipWhileOperator.new(callable))
 	return cloned
 	
 
@@ -127,7 +127,7 @@ func start_with(callable_or_values: Variant) -> SxSignal:
 ## Takes only the first [b]item_count[/b] items from the sequence.
 func take(item_count: int) -> SxSignal:
 	var cloned := clone()
-	var operator := SxTakeOperator.new(item_count)
+	var operator := Sx.TakeOperator.new(item_count)
 	operator.dispose_callback = cloned._set_dispose
 	cloned._operators.append(operator)
 	return cloned
@@ -136,7 +136,7 @@ func take(item_count: int) -> SxSignal:
 ## Emits items until the given predicate returns false.
 func take_while(callable: Callable) -> SxSignal:
 	var cloned := clone()
-	var operator := SxTakeWhileOperator.new(callable)
+	var operator := Sx.TakeWhileOperator.new(callable)
 	operator.dispose_callback = cloned._set_dispose
 	cloned._operators.append(operator)
 	return cloned
@@ -159,7 +159,7 @@ func _set_dispose():
 
 
 func _handle_signal(callback: Callable, args: Array[Variant], variadic := true) -> void:
-	var result: SxOperatorResult = SxOperatorResult.new(true, args)
+	var result: Sx.OperatorResult = Sx.OperatorResult.new(true, args)
 	for operator in _operators:
 		@warning_ignore("redundant_await")
 		result = await operator.evaluate(result.args)

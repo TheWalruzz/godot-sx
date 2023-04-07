@@ -1,5 +1,4 @@
 extends SxSignal
-class_name SxBasicSignal
 
 
 var _signal: Signal
@@ -10,7 +9,7 @@ func _init(input_signal: Signal):
 	
 	
 func _clone() -> SxSignal:
-	return SxBasicSignal.new(_signal)
+	return Sx.BasicSignal.new(_signal)
 
 
 func _is_valid() -> bool:
@@ -39,7 +38,7 @@ func _subscribe(callback: Callable, on_complete: Callable, variadic := true) -> 
 
 	_signal.connect(handler)
 	
-	return SxSignalDisposable.new(func():
+	return Sx.SignalDisposable.new(func():
 		if _is_valid():
 			if not on_complete.is_null():
 				on_complete.call()

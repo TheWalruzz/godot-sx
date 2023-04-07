@@ -1,5 +1,4 @@
-extends SxOperator
-class_name SxDelayOperator
+extends Sx.Operator
 
 
 var _delay: float
@@ -15,10 +14,10 @@ func _init(delay: float, process_always: bool, process_in_physics: bool, ignore_
 	_ignore_timescale = ignore_timescale
 	
 	
-func clone() -> SxOperator:
-	return SxDelayOperator.new(_delay, _process_always, _process_in_physics, _ignore_timescale)
+func clone() -> Sx.Operator:
+	return Sx.DelayOperator.new(_delay, _process_always, _process_in_physics, _ignore_timescale)
 	
 	
-func evaluate(args: Array[Variant]) -> SxOperatorResult:
+func evaluate(args: Array[Variant]) -> Sx.OperatorResult:
 	await Sx.get_tree().create_timer(_delay, _process_always, _process_in_physics, _ignore_timescale).timeout
-	return SxOperatorResult.new(true, args)
+	return Sx.OperatorResult.new(true, args)
