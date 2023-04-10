@@ -7,6 +7,7 @@ var _is_disposing := false
 var _is_disposed := false
 var _start_with_callable: Callable
 var _disposables := SxCompositeDisposable.new()
+var _waiting_for_disposal := 0
 
 
 ## Clones the signal object.
@@ -155,7 +156,10 @@ func _subscribe(_callable: Callable, _on_complete: Callable, _variadic := true) 
 
 
 func _set_dispose():
-	_is_disposing = true
+	if not _is_disposing:
+		_waiting_for_disposal = _disposables.size()
+		_is_disposing = true
+	_waiting_for_disposal -= 1
 
 
 func _handle_signal(callback: Callable, args: Array[Variant], variadic := true) -> void:
@@ -175,5 +179,5 @@ func _handle_signal(callback: Callable, args: Array[Variant], variadic := true) 
 		callback.callv(result.args)
 	else:
 		callback.call(result.args)
-	if _is_disposing:
+	if _is_disposing and _waiting_for_disposal == 0:
 		dispose()

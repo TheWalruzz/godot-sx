@@ -4,11 +4,12 @@ class_name SxDisposable
 
 var is_disposed := false
 	
-	
+
 func dispose() -> void:
 	pass
 
 
+## Automatically disposes [SxSignal] when either a [Node] is exitting or [SxCompositeDisposable] disposes.
 func dispose_with(source: Variant) -> SxDisposable:
 	if not is_disposed:
 		if source is SxCompositeDisposable:
