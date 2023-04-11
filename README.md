@@ -1,4 +1,4 @@
-# Signal Extensions (Sx) for Godot 4
+# GodotSx - Signal Extensions for Godot 4
 
 Have you ever wanted to do more things with Godot's signals? Maybe merge them or filter them Rx-style?
 Then Signal Extensions (or Sx for short) are for you. This simple and lightweight library allows you to do basic operations on regular Signals
@@ -31,6 +31,16 @@ In order to perform operations on signals, they have to be converted to SxSignal
 signal my_signal
 
 var my_wrapped_signal := Sx.from(my_signal)
+```
+
+Much like when connecting to native signals, some flags can be passed to control the signal connection See: enum Object.ConnectFlags.
+Please note that using [b]ConnectFlags.ONE_SHOT[/b] might break the subscription system of GodotSx. Use [b].first()[/b] operator instead.
+
+```gdscript
+signal my_signal
+
+# this will defer emissions to idle frame, instead of sending them immediately.
+var my_wrapped_signal := Sx.from(my_signal, CONNECT_DEFERRED)
 ```
 
 ### Subscription

@@ -22,8 +22,8 @@ const TimerSignal := preload("res://addons/signal_extensions/signals/sx_timer_si
 
 
 ## Creates [SxSignal] from [Signal].
-func from(input_signal: Signal) -> SxSignal:
-	return Sx.BasicSignal.new(input_signal)
+func from(input_signal: Signal, connect_flags: int = 0) -> SxSignal:
+	return Sx.BasicSignal.new(input_signal, connect_flags)
 
 
 ## Merges emissions of multiple [SxSignal] signals.
@@ -32,10 +32,10 @@ func merge(signals: Array[SxSignal]) -> SxSignal:
 	
 
 ## Merges emissions of multiple [Signal] signals.
-func merge_from(signals: Array[Signal]) -> SxSignal:
+func merge_from(signals: Array[Signal], connect_flags: int = 0) -> SxSignal:
 	var converted_signals: Array[SxSignal] = []
 	converted_signals.assign(signals.map(func(input: Signal) -> SxSignal: 
-		return Sx.BasicSignal.new(input)
+		return Sx.BasicSignal.new(input, connect_flags)
 	))
 	return merge(converted_signals)
 
@@ -44,6 +44,7 @@ func merge_from(signals: Array[Signal]) -> SxSignal:
 ## For more information about [b]process_callback[/b], see [Timer].
 func interval_timer(
 	interval: float,
+	connect_flags: int = 0,
 	mode: Node.ProcessMode = Node.PROCESS_MODE_INHERIT,
 	process_callback: Timer.TimerProcessCallback = Timer.TIMER_PROCESS_IDLE
 ) -> SxSignal:
@@ -53,4 +54,4 @@ func interval_timer(
 	timer_node.process_mode = mode
 	timer_node.process_callback = process_callback
 	add_child(timer_node)
-	return Sx.TimerSignal.new(timer_node)
+	return Sx.TimerSignal.new(timer_node, connect_flags)

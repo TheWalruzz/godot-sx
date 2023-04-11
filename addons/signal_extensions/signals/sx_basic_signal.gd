@@ -2,14 +2,16 @@ extends SxSignal
 
 
 var _signal: Signal
+var _connect_flags: int = 0
 
 
-func _init(input_signal: Signal):
+func _init(input_signal: Signal, connect_flags: int = 0):
 	_signal = input_signal
+	_connect_flags = connect_flags
 	
 	
 func _clone() -> SxSignal:
-	return Sx.BasicSignal.new(_signal)
+	return Sx.BasicSignal.new(_signal, _connect_flags)
 
 
 func _is_valid() -> bool:
@@ -36,7 +38,7 @@ func _subscribe(callback: Callable, on_complete: Callable, variadic := true) -> 
 			push_error("Sx does not support more than 6 arguments in a signal. Signal won't be handled.")
 			return
 
-	_signal.connect(handler)
+	_signal.connect(handler, _connect_flags)
 	
 	return Sx.SignalDisposable.new(func():
 		if _is_valid():
