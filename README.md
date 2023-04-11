@@ -34,7 +34,7 @@ var my_wrapped_signal := Sx.from(my_signal)
 ```
 
 Much like when connecting to native signals, some flags can be passed to control the signal connection See: enum Object.ConnectFlags.
-Please note that using [b]ConnectFlags.ONE_SHOT[/b] might break the subscription system of GodotSx. Use [b].first()[/b] operator instead.
+Please note that using *ConnectFlags.ONE_SHOT* might break the subscription system of GodotSx. Use *.first()* operator instead.
 
 ```gdscript
 signal my_signal
