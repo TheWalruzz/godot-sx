@@ -174,8 +174,90 @@ Creation of one-shot timers this way is not supported, but you can just do:
 Sx.from(get_tree().create_timer(1.0).timeout).subscribe(func(): print("Timeout!"))
 ```
 
+### On complete callback
+When you're subscribing, you can set an optional callback that will be fired when the signal completes (either naturally, or when signal is disposed).
+
+```gdscript
+signal numbers(int)
+
+Sx.from(numbers).first().subscribe(
+	func(value: int): print(value),
+	func(): print("Completed")
+)
+numbers.emit(5)
+
+# result:
+#	5
+#	Completed
+```
+
+Or:
+	
+```gdscript
+signal numbers(int)
+
+var disposable := Sx.from(numbers).subscribe(
+	func(value: int): print(value),
+	func(): print("Completed")
+)
+numbers.emit(5)
+disposable.dispose()
+
+# result:
+#	5
+#	Completed
+```
+
 ### Subscription disposal
-You might want to dispose SxSignals earlier or when the subscribing Node exits the tree (both of which are highly recommended to make sure no accidental memory leaks occur).
+Signals can dispose themselves (and disconnect from signals) when some of operators are used. These include:
+* take_while
+* take
+* element_at
+* first
+
+When they finish their emissions, they dispose themselves according to the operator used.
+
+```gdscript
+signal numbers(value)
+
+
+Sx.from(numbers).take_while(func(value: int): return value < 0) \
+	.subscribe(
+		func(value: int): print(value),
+		func(): print("Completed")
+)
+numbers.emit(-2)
+numbers.emit(-1)
+numbers.emit(0)
+numbers.emit(1)
+numbers.emit(2)
+
+# result:
+#	-2
+#	-1
+#	Completed
+```
+
+```gdscript
+signal numbers(value)
+
+
+Sx.from(numbers).first().subscribe(
+		func(value: int): print(value),
+		func(): print("Completed")
+)
+numbers.emit(-2)
+numbers.emit(-1)
+numbers.emit(0)
+numbers.emit(1)
+numbers.emit(2)
+
+# result:
+#	-2
+#	Completed
+```
+
+You might want to dispose SxSignals manually, or automatically when the subscribing Node exits the tree (both of which are highly recommended to make sure no accidental memory leaks occur).
 `subscribe()` method returns a SxDisposable object which allows for:
 * manual subscription disposal (and subsequent disconnection from signal) using `dispose()`
 * automatic disposal when Node is exitting the scene tree using `dispose_with(Node)`
@@ -238,40 +320,6 @@ property.value = 15
 
 # result:
 #	15
-```
-
-### On complete callback
-When you're subscribing, you can set an optional callback that will be fired when the signal completes (either naturally, or when signal is disposed).
-
-```gdscript
-signal numbers(int)
-
-Sx.from(numbers).first().subscribe(
-	func(value: int): print(value),
-	func(): print("Completed")
-)
-numbers.emit(5)
-
-# result:
-#	5
-#	Completed
-```
-
-Or:
-	
-```gdscript
-signal numbers(int)
-
-var disposable := Sx.from(numbers).subscribe(
-	func(value: int): print(value),
-	func(): print("Completed")
-)
-numbers.emit(5)
-disposable.dispose()
-
-# result:
-#	5
-#	Completed
 ```
 
 ### All available operators
