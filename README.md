@@ -322,6 +322,70 @@ property.value = 15
 #	15
 ```
 
+There are also wrappers around Array and Dictionary, called SxArrayProperty and SxDictionaryProperty, but they're more complex.
+For starters, all operations that result in count of items change, should be processed by the Sx wrapper, but everything else, 
+like filtering, and mapping items is allowed only through special getter *.value* which returns the underlying Array or Dictionary.
+
+```gdscript
+var array := SxArrayProperty.new()
+array.as_signal().subscribe(func(type: SxArrayProperty.Type, current_array: Array, payload: Variant):
+	print(type, current_array, payload)
+)
+array.append(2)
+
+# result:
+#	SxArrayProperty.UPDATED_LIST [] []
+#	SxArrayProperty.UPDATED [2] 2
+#	SxArrayProperty.Type.COUNT_CHANGED [2] 1
+```
+
+```gdscript
+var dict := SxDictionaryProperty.new()
+dict.as_signal().subscribe(func(type: SxDictionaryProperty.Type, current: Dictionary, payload: Variant):
+	print(type, current, payload)
+)
+dict.set_value("test", 2)
+
+# result:
+#	SxDictionaryProperty.UPDATED_LIST {} {}
+#	SxDictionaryProperty.UPDATED {"test":2} "test"
+#	SxDictionaryProperty.Type.COUNT_CHANGED {"test":2} 1
+```
+
+When getting the underlying value, use *.value*
+
+```gdscript
+var array := SxArrayProperty.new([1])
+print(array.value[0])
+
+# result:
+#	1
+```
+
+To observe specific events:
+	
+```gdscript
+var array := SxArrayProperty.new([1])
+array.observe(SxArrayProperty.Type.UPDATED).subscribe(func(current_array: Array, payload: Variant):
+	print(current_array, payload)
+)
+```
+
+Both *.as_signal()* and *.observe()* can take an optional bool argument *emit_initial_value* which can be set to false.
+Doing so will not emit the current state when subscribing:
+
+```gdscript
+var dict := SxDictionaryProperty.new()
+dict.as_signal(false).subscribe(func(type: SxDictionaryProperty.Type, current: Dictionary, payload: Variant):
+	print(type, current, payload)
+)
+dict.set_value("test", 2)
+
+# result:
+#	SxDictionaryProperty.UPDATED {"test":2} "test"
+#	SxDictionaryProperty.Type.COUNT_CHANGED {"test":2} 1
+```
+
 ### All available operators
 * delay
 * element_at
