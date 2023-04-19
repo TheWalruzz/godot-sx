@@ -19,6 +19,8 @@ var value: Dictionary:
 	get: return _value
 	
 var _last_size := 0
+var _iter_current_index := 0
+var _iter_keys := []
 	
 
 func _init(initial_value: Dictionary = {}):
@@ -31,7 +33,26 @@ func _init(initial_value: Dictionary = {}):
 		value_changed.emit(Type.COUNT_CHANGED, dict, dict.size())
 		_last_size = dict.size()
 	)
-	
+
+
+func _iter_init(_arg) -> bool:
+	_iter_keys = keys()
+	_iter_current_index = 0
+	return _iter_should_continue()
+
+
+func _iter_next(_arg) -> bool:
+	_iter_current_index += 1
+	return _iter_should_continue()
+
+
+func _iter_get(_arg) -> Variant:
+	return _value[_iter_keys[_iter_current_index]]
+
+
+func _iter_should_continue() -> bool:
+	return _iter_current_index < size()
+
 	
 func clear() -> void:
 	_value.clear()
@@ -53,6 +74,10 @@ func has(item: Variant) -> bool:
 	return _value.has(item)
 	
 	
+func keys() -> Array:
+	return _value.keys()
+	
+	
 func merge(dictionary: Dictionary, overwrite: bool = false) -> void:
 	_value.merge(dictionary, overwrite)
 	value_changed.emit(Type.UPDATED_LIST, _value, dictionary)
@@ -66,6 +91,10 @@ func set_value(key: Variant, item: Variant) -> void:
 	
 func size() -> int:
 	return _value.size()
+	
+	
+func values() -> Array:
+	return _value.values()
 	
 
 ## Observes every type of event with [enum Type] in the [SxDictionaryProperty].

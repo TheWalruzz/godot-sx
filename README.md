@@ -33,7 +33,7 @@ signal my_signal
 var my_wrapped_signal := Sx.from(my_signal)
 ```
 
-Much like when connecting to native signals, some flags can be passed to control the signal connection See: enum Object.ConnectFlags.
+Much like when connecting to native signals, some flags can be passed to control the signal connection. See: enum Object.ConnectFlags.
 Please note that using *ConnectFlags.ONE_SHOT* might break the subscription system of GodotSx. Use *.first()* operator instead.
 
 ```gdscript
@@ -352,13 +352,15 @@ dict.set_value("test", 2)
 #	SxDictionaryProperty.Type.COUNT_CHANGED {"test":2} 1
 ```
 
-When getting the underlying value, use *.value*
+When getting the underlying value, use *.value* or *.get_index()*/*.get_value()*
 
 ```gdscript
 var array := SxArrayProperty.new([1])
 print(array.value[0])
+print(array.get_index(0))
 
 # result:
+#	1
 #	1
 ```
 
@@ -384,6 +386,29 @@ dict.set_value("test", 2)
 # result:
 #	SxDictionaryProperty.UPDATED {"test":2} "test"
 #	SxDictionaryProperty.Type.COUNT_CHANGED {"test":2} 1
+```
+
+Both SxArrayProperty and SxDictionaryProperty implement custom iterators, so they can iterated on in for loops:
+
+```gdscript
+var array := SxArrayProperty.new([10, 20, 30])
+for item in array:
+	print(item)
+	
+# result:
+#	10
+#	20
+#	30
+```
+
+```gdscript
+var dict := SxDictionaryProperty.new({test1 = 1, test2 = 2})
+for key in dict:
+	print(key)
+	
+# result:
+#	test1
+#	test2
 ```
 
 ### All available operators

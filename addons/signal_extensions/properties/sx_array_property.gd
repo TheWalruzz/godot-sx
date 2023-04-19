@@ -19,6 +19,7 @@ var value: Array:
 	get: return _value
 	
 var _last_size := 0
+var _iter_current_index := 0
 	
 
 func _init(initial_value: Array = []):
@@ -31,7 +32,25 @@ func _init(initial_value: Array = []):
 		value_changed.emit(Type.COUNT_CHANGED, array, array.size())
 		_last_size = array.size()
 	)
-	
+
+
+func _iter_init(_arg) -> bool:
+	_iter_current_index = 0
+	return _iter_should_continue()
+
+
+func _iter_next(_arg) -> bool:
+	_iter_current_index += 1
+	return _iter_should_continue()
+
+
+func _iter_get(_arg) -> Variant:
+	return _value[_iter_current_index]
+
+
+func _iter_should_continue() -> bool:
+	return _iter_current_index < size()
+
 	
 func append(item: Variant) -> void:
 	_value.append(item)
