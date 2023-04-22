@@ -334,8 +334,8 @@ array.as_signal().subscribe(func(type: SxArrayProperty.Type, current_array: Arra
 array.append(2)
 
 # result:
-#	SxArrayProperty.UPDATED_LIST [] []
-#	SxArrayProperty.UPDATED [2] 2
+#	SxArrayProperty.Type.UPDATED_LIST [] []
+#	SxArrayProperty.Type.UPDATED [2] 2
 #	SxArrayProperty.Type.COUNT_CHANGED [2] 1
 ```
 
@@ -347,8 +347,8 @@ dict.as_signal().subscribe(func(type: SxDictionaryProperty.Type, current: Dictio
 dict.set_value("test", 2)
 
 # result:
-#	SxDictionaryProperty.UPDATED_LIST {} {}
-#	SxDictionaryProperty.UPDATED {"test":2} "test"
+#	SxDictionaryProperty.Type.UPDATED_LIST {} {}
+#	SxDictionaryProperty.Type.UPDATED {"test":2} "test"
 #	SxDictionaryProperty.Type.COUNT_CHANGED {"test":2} 1
 ```
 
@@ -384,7 +384,7 @@ dict.as_signal(false).subscribe(func(type: SxDictionaryProperty.Type, current: D
 dict.set_value("test", 2)
 
 # result:
-#	SxDictionaryProperty.UPDATED {"test":2} "test"
+#	SxDictionaryProperty.Type.UPDATED {"test":2} "test"
 #	SxDictionaryProperty.Type.COUNT_CHANGED {"test":2} 1
 ```
 
