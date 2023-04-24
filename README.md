@@ -33,16 +33,6 @@ signal my_signal
 var my_wrapped_signal := Sx.from(my_signal)
 ```
 
-Much like when connecting to native signals, some flags can be passed to control the signal connection. See: enum Object.ConnectFlags.
-Please note that using *ConnectFlags.ONE_SHOT* might break the subscription system of GodotSx. Use *.first()* operator instead.
-
-```gdscript
-signal my_signal
-
-# this will defer emissions to idle frame, instead of sending them immediately.
-var my_wrapped_signal := Sx.from(my_signal, CONNECT_DEFERRED)
-```
-
 ### Subscription
 To subscribe to emissions, use `.subscribe(Callable)`:
 	
@@ -54,6 +44,16 @@ my_signal.emit()
 
 # result:
 # 	Got it!
+```
+
+Much like when connecting to native signals, some flags can be passed to control the signal connection. See: enum Object.ConnectFlags.
+Please note that using *CONNECT_ONE_SHOT* might break the subscription system of GodotSx. Use *.first()* operator instead.
+
+```gdscript
+signal my_signal
+
+# this will defer emissions to idle frame, instead of sending them immediately.
+Sx.from(my_signal).subscribe(func(): pass, CONNECT_DEFERRED)
 ```
 
 ### Filtering and mapping
@@ -182,6 +182,7 @@ signal numbers(int)
 
 Sx.from(numbers).first().subscribe(
 	func(value: int): print(value),
+	0, # no connect flags
 	func(): print("Completed")
 )
 numbers.emit(5)
@@ -198,6 +199,7 @@ signal numbers(int)
 
 var disposable := Sx.from(numbers).subscribe(
 	func(value: int): print(value),
+	0, # no connect flags
 	func(): print("Completed")
 )
 numbers.emit(5)
@@ -224,6 +226,7 @@ signal numbers(value)
 Sx.from(numbers).take_while(func(value: int): return value < 0) \
 	.subscribe(
 		func(value: int): print(value),
+		0, # no connect flags
 		func(): print("Completed")
 )
 numbers.emit(-2)
@@ -244,6 +247,7 @@ signal numbers(value)
 
 Sx.from(numbers).first().subscribe(
 		func(value: int): print(value),
+		0, # no connect flags
 		func(): print("Completed")
 )
 numbers.emit(-2)

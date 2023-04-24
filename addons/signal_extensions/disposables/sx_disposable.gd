@@ -15,7 +15,7 @@ func dispose_with(source: Variant) -> SxDisposable:
 		if source is SxCompositeDisposable:
 			source.append(self)
 		elif source is Node:
-			source.tree_exiting.connect(dispose)
+			source.tree_exiting.connect(dispose, CONNECT_ONE_SHOT)
 		else:
 			push_error("Trying to call dispose_with() with something different than Node or SxCompositeDisposable.")
 	return self

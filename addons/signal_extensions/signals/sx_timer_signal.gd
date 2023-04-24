@@ -2,25 +2,23 @@ extends SxSignal
 
 
 var _timer: Timer = null
-var _connect_flags: int = 0
 
 
-func _init(timer: Timer, connect_flags: int = 0):
+func _init(timer: Timer):
 	_timer = timer
-	_connect_flags = connect_flags
 
 
 func _clone() -> SxSignal:
-	return Sx.TimerSignal.new(_timer, _connect_flags)
+	return Sx.TimerSignal.new(_timer)
 	
 	
 func _is_valid() -> bool:
 	return super() and is_instance_valid(_timer) and not _timer.is_stopped()
 	
 	
-func _subscribe(callback: Callable, on_complete: Callable, variadic := true) -> SxDisposable:
+func _subscribe(callback: Callable, connect_flags := 0, on_complete := Callable(), variadic := true) -> SxDisposable:
 	var handler: Callable = func(): _handle_signal(callback, [], variadic)
-	_timer.timeout.connect(handler, _connect_flags)
+	_timer.timeout.connect(handler, connect_flags)
 
 	return Sx.SignalDisposable.new(func():
 		if _is_valid():
