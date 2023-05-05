@@ -14,9 +14,8 @@ enum Type {
 signal value_changed(type, array, payload)
 
 
-var _value: Dictionary = {}
-var value: Dictionary:
-	get: return _value
+var value: Dictionary = {}:
+	get: return value
 	
 var _last_size := 0
 var _iter_current_index := 0
@@ -24,8 +23,8 @@ var _iter_keys := []
 	
 
 func _init(initial_value: Dictionary = {}):
-	_value = initial_value
-	_last_size = _value.size()
+	value = initial_value
+	_last_size = value.size()
 	
 	Sx.from(value_changed).filter(func(type: Type, dict: Dictionary, _z):
 		return type != Type.COUNT_CHANGED and _last_size != dict.size()
@@ -47,7 +46,7 @@ func _iter_next(_arg) -> bool:
 
 
 func _iter_get(_arg) -> Variant:
-	return _value[_iter_keys[_iter_current_index]]
+	return value[_iter_keys[_iter_current_index]]
 
 
 func _iter_should_continue() -> bool:
@@ -55,13 +54,13 @@ func _iter_should_continue() -> bool:
 
 	
 func clear() -> void:
-	_value.clear()
+	value.clear()
 	value_changed.emit(Type.CLEARED, _value, null)
 	
 	
 func erase(item: Variant) -> void:
-	_value.erase(item)
-	value_changed.emit(Type.ERASED, _value, item)
+	value.erase(item)
+	value_changed.emit(Type.ERASED, value, item)
 
 
 func get_value(key: Variant, default: Variant = null) -> Variant:
@@ -71,30 +70,30 @@ func get_value(key: Variant, default: Variant = null) -> Variant:
 	
 	
 func has(item: Variant) -> bool:
-	return _value.has(item)
+	return value.has(item)
 	
 	
 func keys() -> Array:
-	return _value.keys()
+	return value.keys()
 	
 	
 func merge(dictionary: Dictionary, overwrite: bool = false) -> void:
-	_value.merge(dictionary, overwrite)
-	value_changed.emit(Type.UPDATED_LIST, _value, dictionary)
+	value.merge(dictionary, overwrite)
+	value_changed.emit(Type.UPDATED_LIST, value, dictionary)
 	
 	
 	
 func set_value(key: Variant, item: Variant) -> void:
-	_value[key] = item
-	value_changed.emit(Type.UPDATED, _value, key)
+	value[key] = item
+	value_changed.emit(Type.UPDATED, value, key)
 	
 	
 func size() -> int:
-	return _value.size()
+	return value.size()
 	
 	
 func values() -> Array:
-	return _value.values()
+	return value.values()
 	
 
 ## Observes every type of event with [enum Type] in the [SxDictionaryProperty].
@@ -103,7 +102,7 @@ func values() -> Array:
 func as_signal(emit_initial_value := true) -> SxSignal:
 	var result := Sx.from(value_changed)
 	if emit_initial_value:
-		result = result.start_with(func(): return [Type.UPDATED_LIST, _value, _value])
+		result = result.start_with(func(): return [Type.UPDATED_LIST, value, value])
 	return result
 	
 
