@@ -172,6 +172,10 @@ Creation of one-shot timers this way is not supported, but you can just do:
 
 ```gdscript
 Sx.from(get_tree().create_timer(1.0).timeout).subscribe(func(): print("Timeout!"))
+
+# or:
+
+Sx.interval_timer(1.0).first().subscribe(func(): print("Timeout!"))
 ```
 
 ### On complete callback
