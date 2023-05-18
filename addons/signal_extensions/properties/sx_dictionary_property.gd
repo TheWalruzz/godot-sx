@@ -55,7 +55,7 @@ func _iter_should_continue() -> bool:
 	
 func clear() -> void:
 	value.clear()
-	value_changed.emit(Event.CLEARED, _value, null)
+	value_changed.emit(Event.CLEARED, value, null)
 	
 	
 func erase(item: Variant) -> void:
@@ -66,7 +66,7 @@ func erase(item: Variant) -> void:
 func get_value(key: Variant, default: Variant = null) -> Variant:
 	if not has(key):
 		return default
-	return _value[key]
+	return value[key]
 	
 	
 func has(item: Variant) -> bool:
