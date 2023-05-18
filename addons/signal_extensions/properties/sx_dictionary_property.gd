@@ -2,7 +2,7 @@ extends RefCounted
 class_name SxDictionaryProperty
 
 
-enum Type {
+enum Event {
 	UPDATED_LIST,
 	UPDATED,
 	ERASED,
@@ -26,10 +26,10 @@ func _init(initial_value: Dictionary = {}):
 	value = initial_value
 	_last_size = value.size()
 	
-	Sx.from(value_changed).filter(func(type: Type, dict: Dictionary, _z):
-		return type != Type.COUNT_CHANGED and _last_size != dict.size()
+	Sx.from(value_changed).filter(func(type: Event, dict: Dictionary, _z):
+		return type != Event.COUNT_CHANGED and _last_size != dict.size()
 	).subscribe(func(_x, dict: Dictionary, _z): 
-		value_changed.emit(Type.COUNT_CHANGED, dict, dict.size())
+		value_changed.emit(Event.COUNT_CHANGED, dict, dict.size())
 		_last_size = dict.size()
 	)
 
@@ -55,12 +55,12 @@ func _iter_should_continue() -> bool:
 	
 func clear() -> void:
 	value.clear()
-	value_changed.emit(Type.CLEARED, _value, null)
+	value_changed.emit(Event.CLEARED, _value, null)
 	
 	
 func erase(item: Variant) -> void:
 	value.erase(item)
-	value_changed.emit(Type.ERASED, value, item)
+	value_changed.emit(Event.ERASED, value, item)
 
 
 func get_value(key: Variant, default: Variant = null) -> Variant:
@@ -79,13 +79,13 @@ func keys() -> Array:
 	
 func merge(dictionary: Dictionary, overwrite: bool = false) -> void:
 	value.merge(dictionary, overwrite)
-	value_changed.emit(Type.UPDATED_LIST, value, dictionary)
+	value_changed.emit(Event.UPDATED_LIST, value, dictionary)
 	
 	
 	
 func set_value(key: Variant, item: Variant) -> void:
 	value[key] = item
-	value_changed.emit(Type.UPDATED, value, key)
+	value_changed.emit(Event.UPDATED, value, key)
 	
 	
 func size() -> int:
@@ -96,19 +96,19 @@ func values() -> Array:
 	return value.values()
 	
 
-## Observes every type of event with [enum Type] in the [SxDictionaryProperty].
+## Observes every type of event with [enum Event] in the [SxDictionaryProperty].
 ## [b]emit_initial_value[/b] can be set to false to not emit current value on subscription.
-## Returns [SxSignal](Type, dictionary, payload).
+## Returns [SxSignal](Event, dictionary, payload).
 func as_signal(emit_initial_value := true) -> SxSignal:
 	var result := Sx.from(value_changed)
 	if emit_initial_value:
-		result = result.start_with(func(): return [Type.UPDATED_LIST, value, value])
+		result = result.start_with(func(): return [Event.UPDATED_LIST, value, value])
 	return result
 	
 
-## Observes specific event with [enum Type]
+## Observes specific event with [enum Event]
 ## Returns [SxSignal](dictionary, payload).
-func observe(event: Type) -> SxSignal:
-	return as_signal().filter(func(type: Type, _y, _z): return type == event) \
+func observe(event: Event) -> SxSignal:
+	return as_signal().filter(func(type: Event, _y, _z): return type == event) \
 		.map(func(_x, dict: Dictionary, payload: Variant): return [dict, payload])
 

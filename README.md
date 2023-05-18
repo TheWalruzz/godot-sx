@@ -336,28 +336,28 @@ like filtering, and mapping items is allowed only through special getter *.value
 
 ```gdscript
 var array := SxArrayProperty.new()
-array.as_signal().subscribe(func(type: SxArrayProperty.Type, current_array: Array, payload: Variant):
+array.as_signal().subscribe(func(type: SxArrayProperty.Event, current_array: Array, payload: Variant):
 	print(type, current_array, payload)
 )
 array.append(2)
 
 # result:
-#	SxArrayProperty.Type.UPDATED_LIST [] []
-#	SxArrayProperty.Type.UPDATED [2] 2
-#	SxArrayProperty.Type.COUNT_CHANGED [2] 1
+#	SxArrayProperty.Event.UPDATED_LIST [] []
+#	SxArrayProperty.Event.UPDATED [2] 2
+#	SxArrayProperty.Event.COUNT_CHANGED [2] 1
 ```
 
 ```gdscript
 var dict := SxDictionaryProperty.new()
-dict.as_signal().subscribe(func(type: SxDictionaryProperty.Type, current: Dictionary, payload: Variant):
+dict.as_signal().subscribe(func(type: SxDictionaryProperty.Event, current: Dictionary, payload: Variant):
 	print(type, current, payload)
 )
 dict.set_value("test", 2)
 
 # result:
-#	SxDictionaryProperty.Type.UPDATED_LIST {} {}
-#	SxDictionaryProperty.Type.UPDATED {"test":2} "test"
-#	SxDictionaryProperty.Type.COUNT_CHANGED {"test":2} 1
+#	SxDictionaryProperty.Event.UPDATED_LIST {} {}
+#	SxDictionaryProperty.Event.UPDATED {"test":2} "test"
+#	SxDictionaryProperty.Event.COUNT_CHANGED {"test":2} 1
 ```
 
 When getting the underlying value, use *.value* or *.get_index()*/*.get_value()*
@@ -376,7 +376,7 @@ To observe specific events:
 	
 ```gdscript
 var array := SxArrayProperty.new([1])
-array.observe(SxArrayProperty.Type.UPDATED).subscribe(func(current_array: Array, payload: Variant):
+array.observe(SxArrayProperty.Event.UPDATED).subscribe(func(current_array: Array, payload: Variant):
 	print(current_array, payload)
 )
 ```
@@ -386,14 +386,14 @@ Doing so will not emit the current state when subscribing:
 
 ```gdscript
 var dict := SxDictionaryProperty.new()
-dict.as_signal(false).subscribe(func(type: SxDictionaryProperty.Type, current: Dictionary, payload: Variant):
+dict.as_signal(false).subscribe(func(type: SxDictionaryProperty.Event, current: Dictionary, payload: Variant):
 	print(type, current, payload)
 )
 dict.set_value("test", 2)
 
 # result:
-#	SxDictionaryProperty.Type.UPDATED {"test":2} "test"
-#	SxDictionaryProperty.Type.COUNT_CHANGED {"test":2} 1
+#	SxDictionaryProperty.Event.UPDATED {"test":2} "test"
+#	SxDictionaryProperty.Event.COUNT_CHANGED {"test":2} 1
 ```
 
 Both SxArrayProperty and SxDictionaryProperty implement custom iterators, so they can iterated on in for loops:
