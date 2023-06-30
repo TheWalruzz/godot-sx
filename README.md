@@ -146,6 +146,23 @@ signal2.emit(2)
 #	6
 ```
 
+Alternatively, you can use `merge` operator:
+
+```gdscript
+signal signal1(int)
+signal signal2(int)
+
+Sx.from(signal1).map(func(value: int): return value * 2).merge([
+	Sx.from(signal2).map(func(value: int): return value * 3)
+]).subscribe(func(value: int): print(value))
+signal1.emit(1)
+signal2.emit(2)
+
+# result:
+#	2
+#	6
+```
+
 ### Timers
 To simplify creation of periodic interval timers (without the hassle of creating and managing a Timer node yourself),
 you can use `Sx.interval_timer()` to create a SxSignal that will periodically emit items.
