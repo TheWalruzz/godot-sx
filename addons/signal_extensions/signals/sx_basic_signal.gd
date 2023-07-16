@@ -34,7 +34,7 @@ func _subscribe(callback: Callable, connect_flags := 0, on_complete := Callable(
 		6: handler = func(arg1, arg2, arg3, arg4, arg5, arg6): _handle_signal(callback, [arg1, arg2, arg3, arg4, arg5, arg6], variadic)
 		_:
 			push_error("Sx does not support more than 6 arguments in a signal. Signal won't be handled.")
-			return
+			return null
 
 	_signal.connect(handler, connect_flags)
 	

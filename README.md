@@ -453,5 +453,8 @@ for key in dict:
 Please note that full implementation of all Rx operators is NOT a goal of this library.
 If you have a more complex problem that cannot be solved with Sx, then use GodotRx instead.
 
+# Unit tests
+This library uses gdUnit4 as the unit test framework, but it is not provided in this repo. In order to run the tests, it needs to be installed manually (more information here: https://mikeschulze.github.io/gdUnit4/first_steps/install/). After that, tests can be run from the editor.
+
 # License
 Distributed under the [MIT License](https://github.com/TheWalruzz/godot-sx/blob/main/LICENSE).

@@ -2,7 +2,7 @@ extends RefCounted
 class_name SxProperty
 
 
-signal value_changed(new_value)
+signal value_changed(new_value: Variant)
 
 
 var value: Variant:
@@ -20,7 +20,7 @@ func _init(initial_value: Variant):
 ## If [b]emit_initial_value[/b] is set to false, then no value will be emitted on subscription.
 ## Returns [SxSignal](value)
 func as_signal(emit_initial_value := true) -> SxSignal:
-	var result = Sx.from(value_changed)
+	var result := Sx.from(value_changed)
 	if emit_initial_value:
 		result = result.start_with(func(): return [value])
 	return result

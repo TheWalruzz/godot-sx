@@ -31,7 +31,10 @@ func subscribe(callback: Callable, connect_flags := 0, on_complete := Callable()
 	if not _is_valid():
 		push_error("Trying to subscribe to invalid SxSignal.")
 		return null
-	var disposable := _subscribe(callback, connect_flags, on_complete, variadic).dispose_with(_disposables)
+	var disposable := _subscribe(callback, connect_flags, on_complete, variadic)
+	if disposable == null:
+		return null
+	disposable.dispose_with(_disposables)
 	if not _start_with_callable.is_null():
 		var args := _start_with_callable.call() as Array[Variant]
 		_handle_signal(callback, args, variadic)

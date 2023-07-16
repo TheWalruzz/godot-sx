@@ -11,7 +11,8 @@ config_version=5
 [application]
 
 config/name="Signal Extensions"
-config/features=PackedStringArray("4.0", "Forward Plus")
+config/tags=PackedStringArray("library")
+config/features=PackedStringArray("4.1", "Forward Plus")
 config/icon="res://logo.png"
 
 [autoload]
@@ -24,4 +25,12 @@ gdscript/warnings/exclude_addons=false
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/signal_extensions/plugin.cfg")
+enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg", "res://addons/signal_extensions/plugin.cfg")
+
+[filesystem]
+
+import/blender/enabled=false
+
+[gdunit4]
+
+settings/test/test_root_folder="../../test"

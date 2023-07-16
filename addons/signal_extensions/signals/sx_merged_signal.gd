@@ -18,8 +18,10 @@ func _is_valid() -> bool:
 
 func _subscribe(callback: Callable, connect_flags := 0, on_complete := Callable(), variadic := true) -> SxDisposable:
 	var composite_disposable := SxCompositeDisposable.new()
+	if _signals.size() == 0:
+		return null
 	for input_signal in _signals:
-		input_signal.subscribe(func(args: Array[Variant]): _handle_signal(callback, args, variadic), connect_flags, on_complete, false) \
+		input_signal.subscribe(func(args: Array[Variant]): _handle_signal(callback, args, variadic), connect_flags, Callable(), false) \
 			.dispose_with(composite_disposable)
 	
 	return Sx.SignalDisposable.new(func():
