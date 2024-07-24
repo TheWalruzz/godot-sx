@@ -195,6 +195,16 @@ Sx.from(get_tree().create_timer(1.0).timeout).subscribe(func(): print("Timeout!"
 Sx.interval_timer(1.0).first().subscribe(func(): print("Timeout!"))
 ```
 
+### Debouncing and throttling
+Sx now also provides `debounce()` and `throttle()` operators, which either debounce or throttle the emission of signals based on provided time duration.
+
+```gdscript
+var text_edit: TextEdit
+
+Sx.from(text_edit.text_changed).debounce(0.25).subscribe(func(): print(text_edit.text)) # text will be printed to console only after 0.25 seconds elapsed since last keystroke.
+Sx.from(text_edit.text_changed).throttle(0.25).subscribe(func(): print(text_edit.text)) # text will be printed every 0.25 seconds when typing continuously.
+```
+
 ### On complete callback
 When you're subscribing, you can set an optional callback that will be fired when the signal completes (either naturally, or when signal is disposed).
 
@@ -437,6 +447,7 @@ for key in dict:
 ```
 
 ### All available operators
+* debounce
 * delay
 * element_at
 * filter
@@ -449,6 +460,7 @@ for key in dict:
 * start_with
 * take
 * take_while
+* throttle
 
 Please note that full implementation of all Rx operators is NOT a goal of this library.
 If you have a more complex problem that cannot be solved with Sx, then use GodotRx instead.

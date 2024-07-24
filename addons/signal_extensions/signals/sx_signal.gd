@@ -47,6 +47,24 @@ func dispose() -> void:
 	_is_disposed = true
 
 
+## Debounces the signal by [b]debounce_time[/b].
+## This method has arguments consistent with Godot's [method SceneTree.create_timer] method.
+## See that method's documentation for more information.
+func debounce(debounce_time: float, process_always := true, process_in_physics := false, ignore_timescale := false) -> SxSignal:
+	var cloned := clone()
+	cloned._operators.append(Sx.DebounceOperator.new(debounce_time, process_always, process_in_physics, ignore_timescale))
+	return cloned
+	
+
+## Throttles the signal by [b]throttle_time[/b].
+## This method has arguments consistent with Godot's [method SceneTree.create_timer] method.
+## See that method's documentation for more information.
+func throttle(throttle_time: float, process_always := true, process_in_physics := false, ignore_timescale := false) -> SxSignal:
+	var cloned := clone()
+	cloned._operators.append(Sx.ThrottleOperator.new(throttle_time, process_always, process_in_physics, ignore_timescale))
+	return cloned
+
+
 ## Delays item emission by [b]duration[/b]. 
 ## This method has arguments consistent with Godot's [method SceneTree.create_timer] method.
 ## See that method's documentation for more information.

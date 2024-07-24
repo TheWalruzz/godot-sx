@@ -15,6 +15,8 @@ const SkipOperator := preload("res://addons/signal_extensions/operators/sx_skip_
 const SkipWhileOperator := preload("res://addons/signal_extensions/operators/sx_skip_while_operator.gd")
 const TakeOperator := preload("res://addons/signal_extensions/operators/sx_take_operator.gd")
 const TakeWhileOperator := preload("res://addons/signal_extensions/operators/sx_take_while_operator.gd")
+const DebounceOperator := preload("res://addons/signal_extensions/operators/sx_debounce_operator.gd")
+const ThrottleOperator := preload("res://addons/signal_extensions/operators/sx_throttle_operator.gd")
 
 const BasicSignal := preload("res://addons/signal_extensions/signals/sx_basic_signal.gd")
 const MergedSignal := preload("res://addons/signal_extensions/signals/sx_merged_signal.gd")

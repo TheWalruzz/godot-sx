@@ -63,6 +63,14 @@ func test_disposing() -> void:
 	assert_bool(disposable.is_disposed).is_true()
 	
 	
+func test_debounce() -> void:
+	var with_operator := test_signal.debounce(0.1)
+	assert_array(test_signal._operators).has_size(0)
+	assert_object(with_operator).is_not_same(test_signal)
+	assert_object(with_operator._operators[0]).is_instanceof(Sx.DebounceOperator)
+	with_operator.dispose()
+	
+
 func test_delay() -> void:
 	var with_operator := test_signal.delay(0.1)
 	assert_array(test_signal._operators).has_size(0)

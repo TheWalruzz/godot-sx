@@ -27,7 +27,8 @@ func before_test() -> void:
 
 
 func after_test() -> void:
-	disposable.dispose()
+	if disposable != null:
+		disposable.dispose()
 
 
 func test_subscribe_no_params() -> void:
