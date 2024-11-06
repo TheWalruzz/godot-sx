@@ -205,6 +205,53 @@ Sx.from(text_edit.text_changed).debounce(0.25).subscribe(func(): print(text_edit
 Sx.from(text_edit.text_changed).throttle(0.25).subscribe(func(): print(text_edit.text)) # text will be printed every 0.25 seconds when typing continuously.
 ```
 
+
+### Scan operator
+Sx allows for scanning and buffering incoming values inside a stateful operator. This operator behavves similar to reduce() in functional programming.
+
+```gdscript
+signal numbers(value: int)
+
+Sx.from(numbers).scan(
+	func(acc: int, value: int):
+		return acc + value,
+	0
+).subscribe(func(value: int): print(value))
+
+numbers.emit(3)
+numbers.emit(2)
+numbers.emit(7)
+
+# result:
+#	3
+#	5
+#	12
+```
+
+This can also be useful if you want to collect previous emissions:
+```gdscript
+signal numbers(value: int)
+
+Sx.from(numbers).scan(
+	func(acc: Array[int], value: int):
+		acc.append(value)
+		return acc,
+	[]
+).subscribe(func(value: Array[int]): print(value))
+
+numbers.emit(3)
+numbers.emit(2)
+numbers.emit(7)
+
+# result:
+#	[3]
+#	[3, 2]
+#	[3, 2, 7]
+```
+
+Due to the way the reducing function works, while multiple signal arguments will be passed to the function after the accumulator, this function should return one value.
+Subsequent operator after `scan` will receive ONE argument.
+
 ### On complete callback
 When you're subscribing, you can set an optional callback that will be fired when the signal completes (either naturally, or when signal is disposed).
 
@@ -455,6 +502,7 @@ for key in dict:
 * map
 * merge
 * merge_from
+* scan
 * skip
 * skip_while
 * start_with

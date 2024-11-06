@@ -54,15 +54,6 @@ func debounce(debounce_time: float, process_always := true, process_in_physics :
 	var cloned := clone()
 	cloned._operators.append(Sx.DebounceOperator.new(debounce_time, process_always, process_in_physics, ignore_timescale))
 	return cloned
-	
-
-## Throttles the signal by [b]throttle_time[/b].
-## This method has arguments consistent with Godot's [method SceneTree.create_timer] method.
-## See that method's documentation for more information.
-func throttle(throttle_time: float, process_always := true, process_in_physics := false, ignore_timescale := false) -> SxSignal:
-	var cloned := clone()
-	cloned._operators.append(Sx.ThrottleOperator.new(throttle_time, process_always, process_in_physics, ignore_timescale))
-	return cloned
 
 
 ## Delays item emission by [b]duration[/b]. 
@@ -121,6 +112,14 @@ func merge_from(signals: Array[Signal]) -> SxSignal:
 	return merge(converted)
 
 
+## Scans the emitted items and can reduce them to a single value over time.
+## Reducing function: func(acc: ACC_TYPE, ...args: Array[Variant]) -> ACC_TYPE
+func scan(callable: Callable, initial_value: Variant) -> SxSignal:
+	var cloned := clone()
+	cloned._operators.append(Sx.ScanOperator.new(callable, initial_value))
+	return cloned
+
+
 ## Skips the first [b]item_count[/b] items from the sequence.
 func skip(item_count: int) -> SxSignal:
 	var cloned := clone()
@@ -161,6 +160,15 @@ func take_while(callable: Callable) -> SxSignal:
 	var operator := Sx.TakeWhileOperator.new(callable)
 	operator.dispose_callback = cloned._set_dispose
 	cloned._operators.append(operator)
+	return cloned
+	
+	
+## Throttles the signal by [b]throttle_time[/b].
+## This method has arguments consistent with Godot's [method SceneTree.create_timer] method.
+## See that method's documentation for more information.
+func throttle(throttle_time: float, process_always := true, process_in_physics := false, ignore_timescale := false) -> SxSignal:
+	var cloned := clone()
+	cloned._operators.append(Sx.ThrottleOperator.new(throttle_time, process_always, process_in_physics, ignore_timescale))
 	return cloned
 
 
