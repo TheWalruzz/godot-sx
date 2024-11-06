@@ -207,7 +207,7 @@ Sx.from(text_edit.text_changed).throttle(0.25).subscribe(func(): print(text_edit
 
 
 ### Scan operator
-Sx allows for scanning and buffering incoming values inside a stateful operator. This operator behavves similar to reduce() in functional programming.
+Sx allows for scanning and buffering incoming values inside a stateful operator. This operator behaves similarly to `reduce()` in functional programming.
 
 ```gdscript
 signal numbers(value: int)
