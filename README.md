@@ -374,9 +374,10 @@ composite_disposable.append(disposable)
 composite_disposable.dispose()
 ```
 
-### Signal-based properties
+### Reactive properties
 Sometimes, you need to store some values and react when they change. For this reason, Sx provides it's own implementation of Signal-based values, much like ReactiveProperties in GodotRx and UniRx.
 
+#### SxProperty
 ```gdscript
 var property := SxProperty.new(10)
 property.as_signal().subscribe(func(value: int): print(value))
@@ -404,6 +405,62 @@ property.value = 15
 #	15
 ```
 
+#### SxSignalProperty
+In case you want to remember last emission from a signal, while keeping the ability to automatically update the value and notify subscribers,
+the SxSignalProperty is for you. 
+This special type of SxProperty, receives a SxSignal and optional `initial_value`.
+It will subscribe to the passed signal and assign the payload to the internal variable whenever emission occurs.
+
+```gdscript
+signal number(value: int)
+
+var property: SxProperty
+
+property = SxSignalProperty.new(
+	Sx.from(number).map(
+		func(value: int):
+			return value * 2
+	),
+	0
+)
+
+print(property.value)
+number.emit(2)
+print(property.value)
+
+# result:
+#	0
+#	4
+```
+
+Of course, SxSignalProperty behaves just like SxProperty, so you can subscribe to that property using `as_signal()`:
+
+```gdscript
+signal number(value: int)
+
+var property: SxProperty
+
+property = SxSignalProperty.new(
+	Sx.from(number).map(
+		func(value: int):
+			return value * 2
+	),
+	0
+)
+
+property.as_signal().subscribe(
+	func(value: int):
+		print(value)
+)
+
+# result:
+#	0
+#	4
+```
+
+Setting the value with `value` will work and will notify all subscribers, however that value will be replaced as soon as new emission occurs.
+
+#### SxArrayProperty and SxDictionaryProperty
 There are also wrappers around Array and Dictionary, called SxArrayProperty and SxDictionaryProperty, but they're more complex.
 For starters, all operations that result in count of items change, should be processed by the Sx wrapper, but everything else, 
 like filtering, and mapping items is allowed only through special getter *.value* which returns the underlying Array or Dictionary.

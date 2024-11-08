@@ -6,14 +6,15 @@ signal value_changed(new_value: Variant)
 
 
 var value: Variant:
-	get: return value
-	set(new_value):
-		value = new_value
-		value_changed.emit(new_value)
+	get: return _get_value()
+	set(new_value): _set_value(new_value)
+	
+	
+var _value: Variant
 
 
 func _init(initial_value: Variant):
-	value = initial_value
+	_value = initial_value
 	
 
 ## Observes the value changes in this [SxProperty].
@@ -24,3 +25,12 @@ func as_signal(emit_initial_value := true) -> SxSignal:
 	if emit_initial_value:
 		result = result.start_with(func(): return [value])
 	return result
+	
+	
+func _get_value() -> Variant:
+	return _value
+	
+	
+func _set_value(new_value: Variant) -> void:
+	_value = new_value
+	value_changed.emit(new_value)
