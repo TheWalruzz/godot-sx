@@ -26,7 +26,7 @@ func _init(initial_value: Dictionary = {}):
 	value = initial_value
 	_last_size = value.size()
 	
-	Sx.from(value_changed).filter(func(type: Event, dict: Dictionary, _z):
+	Sx.from(value_changed).filter(func(type: SxDictionaryProperty.Event, dict: Dictionary, _z):
 		return type != Event.COUNT_CHANGED and _last_size != dict.size()
 	).subscribe(func(_x, dict: Dictionary, _z): 
 		value_changed.emit(Event.COUNT_CHANGED, dict, dict.size())
@@ -111,4 +111,3 @@ func as_signal(emit_initial_value := true) -> SxSignal:
 func observe(event: Event) -> SxSignal:
 	return as_signal().filter(func(type: Event, _y, _z): return type == event) \
 		.map(func(_x, dict: Dictionary, payload: Variant): return [dict, payload])
-

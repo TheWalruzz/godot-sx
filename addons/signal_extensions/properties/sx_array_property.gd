@@ -25,7 +25,7 @@ func _init(initialvalue: Array = []):
 	value = initialvalue
 	_last_size = value.size()
 	
-	Sx.from(value_changed).filter(func(type: Event, array: Array, _z):
+	Sx.from(value_changed).filter(func(type: SxArrayProperty.Event, array: Array, _z):
 		return type != Event.COUNT_CHANGED and _last_size != array.size()
 	).subscribe(func(_x, array: Array, _z): 
 		value_changed.emit(Event.COUNT_CHANGED, array, array.size())
