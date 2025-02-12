@@ -453,6 +453,8 @@ property.as_signal().subscribe(
 		print(value)
 )
 
+number.emit(2)
+
 # result:
 #	0
 #	4
