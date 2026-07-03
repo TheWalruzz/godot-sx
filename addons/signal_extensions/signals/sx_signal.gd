@@ -112,6 +112,16 @@ func merge_from(signals: Array[Signal]) -> SxSignal:
 	return merge(converted)
 
 
+## Paces the signal without dropping any item.
+## [b]interval[/b] can be a float or a function: func(event_n: int) -> float.
+## This method has arguments consistent with Godot's [method SceneTree.create_timer] method.
+## See that method's documentation for more information.
+func pace(interval: Variant, reset_after := INF, process_always := true, process_in_physics := false, ignore_timescale := false) -> SxSignal:
+	var cloned := clone()
+	cloned._operators.append(Sx.PaceOperator.new(interval, reset_after, process_always, process_in_physics, ignore_timescale))
+	return cloned
+
+
 ## Scans the emitted items and can reduce them to a single value over time.
 ## Reducing function: func(acc: ACC_TYPE, ...args: Array[Variant]) -> ACC_TYPE
 func scan(callable: Callable, initial_value: Variant) -> SxSignal:
